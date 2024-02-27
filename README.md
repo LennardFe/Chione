@@ -8,7 +8,7 @@
 <h2 align="center">Features</h2>
 
 <div align="justify">
-<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. Settings allow modules to halt in menus and activate only when Minecraft is in the foreground.</p>
+<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. The settings provide the options to allow modules to halt in menus (incl. inventory & chat) and activate only when Minecraft is in the foreground.</p>
 </div>
 
 ---
@@ -43,7 +43,7 @@ python -m venv .venv
 ```
 
 <div align="justify">
-<p>As the last step, install the required packages with the following command:</p>
+<p>As the last step, install the required packages, which are listed in the <i>requirements.txt</i> with the following command:</p>
 </div>
 
 ```
@@ -51,7 +51,7 @@ $ pip install -r requirements.txt
 ```
 
 <div align="justify">
-<p>You should now be ready to execute the program, navigate to the <i>main.py</i> file and execute it. Chione should open itself. In future releases an .exe file will be provided.</p>
+<p>You should now be ready to execute the program, navigate to the <i>main.py</i> file and start it. Chione should open itself. <b>In future releases an .exe file will be provided.</b></p>
 </div>
 
 ---
