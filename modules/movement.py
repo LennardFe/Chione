@@ -21,7 +21,7 @@ def autosprint(self, module):
         time.sleep(0.01)
 
 def thread_autosprint(self, module): 
-    threading.Thread(target=autosprint, args=(self, module)).start()
+    threading.Thread(target=autosprint, args=(self, module), daemon=True).start()
 
 def wtap(self, module, delay, randomize, hold):
     previous_button_state = 0  # Initialize previous button state
@@ -45,7 +45,7 @@ def wtap(self, module, delay, randomize, hold):
             time.sleep(0.1)
 
 def thread_wtap(self, module, slider, randomize, hold):
-    threading.Thread(target=wtap, args=(self, module, slider, randomize, hold)).start()
+    threading.Thread(target=wtap, args=(self, module, slider, randomize, hold), daemon=True).start()
 
 def strafing(self, module, delay, randomize, hold):
     previous_button_state = 0  # Initialize previous button state
@@ -70,4 +70,4 @@ def strafing(self, module, delay, randomize, hold):
             time.sleep(0.1)
 
 def thread_strafing(self, module, delay, randomize, hold):
-    threading.Thread(target=strafing, args=(self, module, delay, randomize, hold)).start()
+    threading.Thread(target=strafing, args=(self, module, delay, randomize, hold), daemon=True).start()

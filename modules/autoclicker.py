@@ -94,4 +94,4 @@ def rightclick(self, module, clicks_per_second, randomize, shake, hold, button):
             time.sleep(interval) if interval is not None else time.sleep(0.1)
 
 def thread_rclick(self, module, slider, randomize, shake, hold, button="right"):
-    threading.Thread(target=rightclick, args=(self, module, slider, randomize, shake, hold, button)).start()
+    threading.Thread(target=rightclick, args=(self, module, slider, randomize, shake, hold, button), daemon=True).start()

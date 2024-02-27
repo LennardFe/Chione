@@ -13,7 +13,7 @@ def anti_afk(self, module, timer, randomize):
         pyautogui.keyUp("s")
 
 def thread_antiafk(self, module, timer, randomize):
-    threading.Thread(target=anti_afk, args=(self, module, timer, randomize)).start()
+    threading.Thread(target=anti_afk, args=(self, module, timer, randomize), daemon=True).start()
 
 def selfdestruct(self, _):
     #save_settings(self, self.json_file) this results in: can't invoke "destroy" command: application has been destroyed

@@ -4,9 +4,11 @@ from utils.listener import window_listener
 from utils.options import load_settings
 from utils.options import save_settings
 from utils.process import check_minecraft
-from utils.executor import retoggle
 from utils.executor import toggle_and_execute
+from utils.executor import retoggle
+from utils.others import get_file_path
 from utils.others import open_web
+from utils.others import resource
 
 # Internal Imports - Configs
 from config.categories import ModuleCategory
@@ -35,7 +37,7 @@ class GUI:
         self.module_states = {module: False for module in self.modules}
 
         # Declare json file path for saving and loading setting
-        self.json_file = "assets\options.json"
+        self.json_file = resource(get_file_path("options.json"))
 
         # Create the Tkinter root window
         self.root = tk.Tk()
@@ -43,12 +45,12 @@ class GUI:
         self.root.minsize(MIN_SIZE_W, MIN_SIZE_H)
         self.root.geometry(WINDOW_SIZE)
         self.root.configure(bg=CONTENT_COLOR)
-        self.root.iconbitmap("assets\icon.ico")
+        self.root.iconbitmap(resource(get_file_path("icon.ico")))
         self.root.protocol("WM_DELETE_WINDOW", lambda: save_settings(self, self.json_file))
 
         # Load GUI assets
-        self.on = tk.PhotoImage(file="assets/on.png")
-        self.off = tk.PhotoImage(file="assets/off.png")
+        self.on = tk.PhotoImage(file=resource(get_file_path("on.png")))
+        self.off = tk.PhotoImage(file=resource(get_file_path("off.png")))
 
         # Set up keyboard listener
         self.listener = keyboard.Listener(on_press=lambda key: on_key_press(self, key))

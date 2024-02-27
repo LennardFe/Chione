@@ -37,7 +37,7 @@ def controls(self, module, name, text, old_key):
     popup.title(f"Set Key for {text}")
     popup.geometry("400x200")
     popup.configure(bg=CONTENT_COLOR)
-    popup.iconbitmap("assets\icon.ico")
+    #popup.iconbitmap("assets\icon.ico")
     popup.resizable(False, False)
     popup.attributes("-topmost", True)  # ensure the popup stays on top
 

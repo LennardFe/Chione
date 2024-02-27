@@ -1,3 +1,5 @@
+from utils.others import get_file_path
+from utils.others import resource
 from utils.executor import *
 from config.setup import *
 import tkinter as tk
@@ -7,7 +9,7 @@ def set_hotkey(self, button, module):
     popup.title("Set Hotkey")
     popup.geometry("400x200")
     popup.configure(bg=CONTENT_COLOR)
-    popup.iconbitmap("assets\icon.ico")
+    popup.iconbitmap(resource(get_file_path("icon.ico")))
     popup.resizable(False, False)
     popup.attributes("-topmost", True)  # ensure the popup stays on top
 
