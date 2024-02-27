@@ -8,7 +8,7 @@
 <h2 align="center">Features</h2>
 
 <div align="justify">
-<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. The settings provide the options to allow modules to halt in menus (incl. inventory & chat) and activate only when Minecraft is in the foreground.</p>
+<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. In the settings the user can set the option, that all modules halt in menus (incl. inventory & chat) and activate only when Minecraft is in the foreground.</p>
 </div>
 
 ---
@@ -21,6 +21,22 @@
 ---
 
 <h2 align="center">Installation</h2>
+
+<h3 align="center">For Users:</h3>
+
+<div align="center">
+<p><i><b>Follow these steps if you just want to use the tool.</b></i></p>
+</div>
+
+<div align="justify">
+<p>Navigate to the <i>output</i> folder containing the <i>Chione.exe</i> file, download it, and run it. The program should open automatically and function properly. Please note that there is a known bug affecting the saving of changes of the parameters and hotkey settings.</p>
+</div>
+
+<h3 align="center">For Developers:</h3>
+
+<div align="center">
+<p><i><b>Follow these steps if you would like to make changes to the existing source code.</b></i></p>
+</div>
 
 <div align="justify">
 <p>Install Python 3.11.5, ensuring compatibility with the project requirements. Start by navigating to the GitHub page of this project. Locate the green Code button on the top right and click it. You can either clone it using the command prompt with git clone followed by the shown URL, download the zip file, or open it directly with GitHub Desktop. After that navigate to the project folder and continue with the next step.</p>
