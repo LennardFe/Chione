@@ -1,0 +1,55 @@
+[
+    {
+        "name": "LeftClicker",
+        "hotkey": "c",
+        "slider_0": 20,
+        "slider_1": 2,
+        "slider_2": 1,
+        "checkbox_0": true,
+        "checkbox_1": false
+    },
+    {
+        "name": "RightClicker",
+        "hotkey": "None",
+        "slider_0": 20,
+        "slider_1": 2,
+        "slider_2": 2,
+        "checkbox_0": true
+    },
+    {
+        "name": "AutoSprint",
+        "hotkey": "None"
+    },
+    {
+        "name": "W-Tap",
+        "hotkey": "f",
+        "slider_0": 0.8,
+        "slider_1": 0.05,
+        "slider_2": 0.1
+    },
+    {
+        "name": "Strafing",
+        "hotkey": "x",
+        "slider_0": 0.01,
+        "slider_1": 0.0,
+        "slider_2": 0.0
+    },
+    {
+        "name": "AntiAFK",
+        "hotkey": "None",
+        "slider_0": 60,
+        "slider_1": 5
+    },
+    {
+        "name": "SelfDestruct",
+        "hotkey": "o"
+    },
+    {
+        "name": "ActiveWindow",
+        "hotkey": "None"
+    },
+    {
+        "name": "PauseInMenu",
+        "hotkey": "None"
+    }
+]

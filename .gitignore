@@ -1,0 +1,12 @@
+# __pycache__
+assets/__pycache__/
+*.py[cod]
+*$py.class
+
+# Byte-compiled / optimized / DLL files 
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtual enviroment
+.venv/
