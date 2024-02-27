@@ -11,31 +11,32 @@
 <p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. In the settings the user can set the option, that all modules halt in menus (incl. inventory & chat) and activate only when Minecraft is in the foreground.</p>
 </div>
 
----
 
 <h2 align="center">Screenshots</h2>
 
 ![image](https://github.com/vs-marshall/Chione/assets/78146861/969a88e3-3075-43bc-b65c-27c3733f4653)
 ![image](https://github.com/vs-marshall/Chione/assets/78146861/aa3aadd3-877a-46bb-a15e-e8b4ae2dd720)
 
----
 
 <h2 align="center">Installation</h2>
 
 <h3 align="center">For Users:</h3>
 
 <div align="center">
-<p><i><b>Follow these steps if you just want to use the tool.</b></i></p>
+<p><b>Follow these steps if you just want to use the tool.</b></p>
 </div>
 
 <div align="justify">
-<p>Navigate to the <i>output</i> folder containing the <i>Chione.exe</i> file, download it, and run it. The program should open automatically and function properly. Please note that there is a known bug affecting the saving of changes of the parameters and hotkey settings.</p>
+<p>Navigate to the <a href="https://github.com/vs-marshall/Chione/tree/main/output">output</a> folder containing the <a href="https://github.com/vs-marshall/Chione/blob/main/output/Chione.exe">Chione.exe</a> file, click on the .exe and then on the three dots at the top right, as shown in the picture below. Then click on <b>download</b>. This is it; the program should work as intended. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!
+<li>Please note that there is a known bug, if using the .exe, affecting the saving of changes of the parameters and hotkeys.</li></p>
 </div>
+
+![image](https://github.com/vs-marshall/Chione/assets/78146861/4e87dae6-ab53-4961-ab40-b21b161076a0)
 
 <h3 align="center">For Developers:</h3>
 
 <div align="center">
-<p><i><b>Follow these steps if you would like to make changes to the existing source code.</b></i></p>
+<p><b>Follow these steps if you would like to make changes to the existing source code.</b></p>
 </div>
 
 <div align="justify">
@@ -70,12 +71,9 @@ $ pip install -r requirements.txt
 <p>You should now be ready to execute the program, navigate to the <i>main.py</i> file and start it. Chione should open itself. <b>In future releases an .exe file will be provided.</b></p>
 </div>
 
----
 
 <h2 align="center">Additional Information</h2>
 
 <div align="justify">
 <p>The code provided in the "Chione" repository on GitHub is freely available for use, modification, and distribution for any purpose. However, it is a requirement to attribute the original source by linking back to the repository and mentioning the author (vs-marshall). Please note that the code is provided without warranty, and the author (vs-marshall) shall not be liable for any damages arising from its use. Use of the code does not imply endorsement or affiliation with the author (vs-marshall) by the users. By accessing and using the code, you agree to these terms.</p>
 </div>
-
----
