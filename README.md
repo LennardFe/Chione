@@ -15,8 +15,8 @@
 
 <h2 align="center">Screenshots</h2>
 
-![image](https://github.com/vs-marshall/Chione/assets/78146861/872fe639-5232-42be-a7e4-913b0df90e93)
-![image](https://github.com/vs-marshall/Chione/assets/78146861/d0c35cde-0d0c-41ce-bc61-c57b8e0ab6d5)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/969a88e3-3075-43bc-b65c-27c3733f4653)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/aa3aadd3-877a-46bb-a15e-e8b4ae2dd720)
 
 ---
 
