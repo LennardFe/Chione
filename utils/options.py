@@ -1,37 +1,49 @@
-import json, re
+import json, re, os
+
+def get_user_path(json_file):
+    filename = os.path.basename(json_file)
+    home_directory = os.path.expanduser("~")
+    option_path = os.path.join(home_directory, filename)
+    return option_path
 
 def load_settings(self, json_file):
-    print("Loading settings...")
+    user_path = get_user_path(json_file)
     
-    with open(json_file, 'r') as file:
-        modules_data = json.load(file)
-        for module_data in modules_data:
-            module_name = module_data.get("name")
-            module = self.modules.get(module_name)
+    try:
+        with open(user_path, 'r') as file:
+            modules_data = json.load(file)
+    except FileNotFoundError:   # Fallback to original file path
+        with open(json_file, 'r') as file:
+            modules_data = json.load(file)
 
-            if module:
-                module["hotkey"] = module_data.get("hotkey", "None")
-                #module["toggle"] = module_data.get("toggle", False)
-                sliders_count = module.get("slider", 0)
-                checkboxes_count = module.get("checkbox", 0)
-                buttons_count = module.get("button", 0)
+    for module_data in modules_data:
+        module_name = module_data.get("name")
+        module = self.modules.get(module_name)
 
-                for x in range(sliders_count):
-                    slider_key = f"{module_name}_{x}"
-                    self.sliders[slider_key] = module_data.get(f"slider_{x}", False)
+        if module:
+            module["hotkey"] = module_data.get("hotkey", "None")
+            #module["toggle"] = module_data.get("toggle", False)
+            sliders_count = module.get("slider", 0)
+            checkboxes_count = module.get("checkbox", 0)
+            buttons_count = module.get("button", 0)
 
-                for x in range(checkboxes_count):
-                    checkbox_key = f"{module_name}_{x}"
-                    self.checkboxs[checkbox_key] = module_data.get(f"checkbox_{x}", False)
+            for x in range(sliders_count):
+                slider_key = f"{module_name}_{x}"
+                self.sliders[slider_key] = module_data.get(f"slider_{x}", False)
 
-                for x in range(buttons_count):
-                    button_key = f"{module_name}_{x}"
-                    self.buttons[button_key] = module_data.get(f"button_{x}", False)
+            for x in range(checkboxes_count):
+                checkbox_key = f"{module_name}_{x}"
+                self.checkboxs[checkbox_key] = module_data.get(f"checkbox_{x}", False)
 
-            else:
-                print(f"Module {module_name} not found in the class.")
+            for x in range(buttons_count):
+                button_key = f"{module_name}_{x}"
+                self.buttons[button_key] = module_data.get(f"button_{x}", False)
+
+        else:
+            print(f"Module {module_name} not found in the class.")
 
 def save_settings(self, json_file):
+    user_path = get_user_path(json_file)
     modules_data = []
 
     for module_name, module_info in self.modules.items():
@@ -59,7 +71,7 @@ def save_settings(self, json_file):
         modules_data.append(module_data)
 
     # Write module data to the options file
-    with open(json_file, 'w') as file:
+    with open(user_path, 'w') as file:
         json.dump(modules_data, file, indent=4)
 
     self.root.destroy()
