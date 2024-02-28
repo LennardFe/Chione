@@ -67,7 +67,7 @@ $ pip install -r requirements.txt
 ```
 
 <div align="justify">
-<p>You should now be ready to execute the program, navigate to the <i>main.py</i> file and start it. Chione should open itself. <b>In future releases an .exe file will be provided.</b></p>
+<p>You should now be ready to execute the program, navigate to the <i>main.py</i> file and start it. Chione should open itself.</p>
 </div>
 
 
