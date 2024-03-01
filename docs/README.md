@@ -74,5 +74,5 @@ $ pip install -r requirements.txt
 <h2 align="center">Additional Information</h2>
 
 <div align="justify">
-<p>The code provided in the "Chione" repository on GitHub is freely available for use, modification, and distribution for any purpose. However, it is a requirement to attribute the original source by linking back to the repository and mentioning the author (vs-marshall). Please note that the code is provided without warranty, and the author (vs-marshall) shall not be liable for any damages arising from its use. Use of the code does not imply endorsement or affiliation with the author (vs-marshall) by the users. By accessing and using the code, you agree to these terms.</p>
+<p>Please be aware that this work is still in progress. If you encounter any bugs, issues, or have ideas for improvement, please share them under the 'Issues' tab at the top. Additionally, note that the usage of autoclickers and macro tools may be prohibited by some servers. I do not take any responsibility or liability for any consequences resulting from the use of this tool. Use it at your own risk. For more information regarding the usage of the code, please refer to the provided license.</p>
 </div>
