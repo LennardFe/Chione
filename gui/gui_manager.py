@@ -189,6 +189,7 @@ class GUI:
         if module_name.get("slider"):
             for x in range(module_name.get("slider")):
                 
+                # Get slider values
                 name = f"{module}_{x}"
                 slider_min = module_name.get(f"slider_min{x+1}")
                 slider_max = module_name.get(f"slider_max{x+1}")
@@ -196,6 +197,7 @@ class GUI:
                 slider_step = module_name.get(f"slider_step{x+1}")
                 slider_default = module_name.get(f"slider_default{x+1}")
 
+                # Create slider
                 slider = tk.Scale(parent, bg=CONTENT_COLOR, fg=FONT_COLOR, relief=RELIEF_BASIC, highlightthickness=0, font=(FONT, FONT_SIZE_CONTENT), label=slider_text, from_=slider_min, to=slider_max, orient=tk.HORIZONTAL, resolution=slider_step)
                 slider.bind("<ButtonRelease-1>", (lambda _: retoggle(self, module)))
                 slider.pack(side=tk.TOP, fill=tk.X, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X)

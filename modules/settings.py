@@ -5,6 +5,7 @@ import tkinter as tk
 def active_window(self, module):
     while self.module_states.get(module):
         if self.focused_process is not None:
+            # maybe add this as an argument instead of hardcoding it
             if "java" in self.focused_process.lower():
                 self.only_on_active = True
             else:
@@ -21,6 +22,7 @@ def thread_window(self, module):
 def active_menu(self, module):
     while self.module_states.get(module):
         cursorInfo = win32gui.GetCursorInfo()[1]
+        # goofy way to check if the user is in a menu, copied from another repo
         if cursorInfo > 50000 and cursorInfo < 100000:
             self.currently_in_menu = True
         else:
@@ -39,7 +41,7 @@ def controls(self, module, name, text, old_key):
     popup.configure(bg=CONTENT_COLOR)
     #popup.iconbitmap("assets\icon.ico")
     popup.resizable(False, False)
-    popup.attributes("-topmost", True)  # ensure the popup stays on top
+    popup.attributes("-topmost", True)
 
     def set_key(event):
         key = event.keysym
