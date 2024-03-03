@@ -6,23 +6,16 @@ def get_user_path(json_file):
     option_path = os.path.join(home_directory, filename)
     return option_path
 
-def load_settings(self, json_file):
-    user_path = get_user_path(json_file)
-    
-    try:
-        with open(user_path, 'r') as file:
-            modules_data = json.load(file)
-    except FileNotFoundError:   # Fallback to original file path
-        with open(json_file, 'r') as file:
-            modules_data = json.load(file)
+def load_logic(self, path):
+    with open(path, 'r') as file:
+        modules_data = json.load(file)
 
     for module_data in modules_data:
         module_name = module_data.get("name")
         module = self.modules.get(module_name)
 
         if module:
-            module["hotkey"] = module_data.get("hotkey", "None")
-            #module["toggle"] = module_data.get("toggle", False)
+            module["hotkey"] = module_data.get("hotkey", False)
             sliders_count = module.get("slider", 0)
             checkboxes_count = module.get("checkbox", 0)
             buttons_count = module.get("button", 0)
@@ -42,14 +35,21 @@ def load_settings(self, json_file):
         else:
             print(f"Module {module_name} not found in the class.")
 
-def save_settings(self, json_file):
+def load_settings(self, json_file):
     user_path = get_user_path(json_file)
+    
+    try:
+        load_logic(self, user_path)
+    except FileNotFoundError:   # Fallback to original file path
+        load_logic(self, json_file)
+
+def save_logic(self, path):
     modules_data = []
 
     for module_name, module_info in self.modules.items():
         module_data = {
             "name": module_name,
-            "hotkey": module_info.get("hotkey", "None"),
+            "hotkey": module_info.get("hotkey", False),
         }
 
         # Include slider data
@@ -69,9 +69,12 @@ def save_settings(self, json_file):
 
         # Append module data to the list
         modules_data.append(module_data)
-
+    
     # Write module data to the options file
-    with open(user_path, 'w') as file:
+    with open(path, 'w') as file:
         json.dump(modules_data, file, indent=4)
 
+def save_settings(self, json_file):
+    user_path = get_user_path(json_file)
+    save_logic(self, user_path)
     self.root.destroy()

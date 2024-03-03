@@ -1,20 +1,19 @@
 import threading, time, win32gui
 from config.setup import *
-import tkinter as tk
 
 def active_window(self, module):
     while self.module_states.get(module):
         if self.focused_process is not None:
             # maybe add this as an argument instead of hardcoding it
             if "java" in self.focused_process.lower():
-                self.only_on_active = True
+                self.currently_in_foreground = True
             else:
-                self.only_on_active = False
+                self.currently_in_foreground = False
         else:
-            self.only_on_active = False
+            self.currently_in_foreground = False
 
         time.sleep(0.5)
-    self.only_on_active = True
+    self.currently_in_foreground = True
     
 def thread_window(self, module):
     threading.Thread(target=active_window, args=(self, module), daemon=True).start()
@@ -33,28 +32,3 @@ def active_menu(self, module):
 
 def thread_menu(self, module):
     threading.Thread(target=active_menu, args=(self, module), daemon=True).start()
-
-def controls(self, module, name, text, old_key):
-    popup = tk.Toplevel()
-    popup.title(f"Set Key for {text}")
-    popup.geometry("400x200")
-    popup.configure(bg=CONTENT_COLOR)
-    #popup.iconbitmap("assets\icon.ico")
-    popup.resizable(False, False)
-    popup.attributes("-topmost", True)
-
-    def set_key(event):
-        key = event.keysym
-        if key == "Escape":
-            self.buttons[name].config(text=f"{text}: None")
-            popup.destroy()
-        else:
-            self.buttons[name].config(text=f"{text}: [{key.upper()}]")
-            popup.destroy()
-
-    popup.bind("<KeyPress>", set_key)
-
-    label = tk.Label(popup, text=f"Press a key for {text}", font=(FONT, 12), fg=FONT_COLOR, bg=CONTENT_COLOR)
-    label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-    popup.focus_force()

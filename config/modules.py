@@ -1,7 +1,8 @@
 from modules.autoclicker import thread_lclick, thread_rclick
 from modules.movement import thread_autosprint, thread_wtap, thread_strafing
 from modules.misc import thread_antiafk, selfdestruct
-from modules.settings import thread_window, thread_menu, controls
+from modules.configs import save_config, load_config
+from modules.settings import thread_window, thread_menu
 from config.categories import ModuleCategory as MC
 
 modules = {
@@ -16,19 +17,24 @@ modules = {
         "slider_text1": "CPS:",
         "slider_step1": 1,
         "slider_default1": 20,
+        "slider_tooltip1": "Leftclicks per second.",
         "slider_min2": 0,
         "slider_max2": 10,
         "slider_text2": "Randomize:",
         "slider_step2": 1,
         "slider_default2": 2,
+        "slider_tooltip2": "Randomize the Clicks.",
         "slider_min3": 0,
         "slider_max3": 10,
         "slider_text3": "Shake:",
         "slider_step3": 1,
         "slider_default3": 2,
+        "slider_tooltip3": "Shake the mouse while leftclicking.",
         "checkbox": 2,
         "checkbox_text1": "Hold Leftclick",
+        "checkbox_tooltip1": "Click while holding leftclick.",
         "checkbox_text2": "Blockhit",
+        "checkbox_tooltip2": "Enable blockhit in one second intervals.",
         "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value", "get_checkbox_value"], 
         "command": thread_lclick
     },
@@ -43,18 +49,22 @@ modules = {
         "slider_text1": "CPS:",
         "slider_step1": 1,
         "slider_default1": 15,
+        "slider_tooltip1": "Rightclicks per second.",
         "slider_min2": 0,
         "slider_max2": 10,
         "slider_text2": "Randomize:",
         "slider_step2": 1,
         "slider_default2": 2,
+        "slider_tooltip2": "Randomize the Clicks.",
         "slider_min3": 0,
         "slider_max3": 10,
         "slider_text3": "Shake:",
         "slider_step3": 1,
         "slider_default3": 2,
+        "slider_tooltip3": "Shake the mouse while rightclicking.",
         "checkbox": 1,
         "checkbox_text1": "Hold Rightclick",
+        "checkbox_tooltip1": "Click while holding rightclick.",
         "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value"], 
         "command": thread_rclick
     },
@@ -77,16 +87,19 @@ modules = {
         "slider_text1": "Delay:",
         "slider_step1": 0.01,
         "slider_default1": 0.25,
+        "slider_tooltip1": "The delay between each W-Tap.",
         "slider_min2": 0.00,
         "slider_max2": 0.20,
         "slider_text2": "Randomize:",
         "slider_step2": 0.01,
         "slider_default2": 0.10,
+        "slider_tooltip2": "Randomize the delay.",
         "slider_min3": 0.00,
         "slider_max3": 0.50,
         "slider_text3": "Hold:",
         "slider_step3": 0.01,
         "slider_default3": 0.15,
+        "slider_tooltip3": "The time the W-Key will be held.",
         "params": ["get_slider_value", "get_slider_value", "get_slider_value"], 
         "command": thread_wtap
     },
@@ -101,16 +114,19 @@ modules = {
         "slider_text1": "Delay:",
         "slider_step1": 0.01,
         "slider_default1": 0.25,
+        "slider_tooltip1": "The delay between each strafe.",
         "slider_min2": 0.00,
         "slider_max2": 0.20,
         "slider_text2": "Randomize:",
         "slider_step2": 0.01,
         "slider_default2": 0.10,
+        "slider_tooltip2": "Randomize the delay.",
         "slider_min3": 0.00,
         "slider_max3": 0.50,
         "slider_text3": "Hold:",
         "slider_step3": 0.01,
         "slider_default3": 0.15,
+        "slider_tooltip3": "The time the strafe will be held.",
         "params": ["get_slider_value", "get_slider_value", "get_slider_value"], 
         "command": thread_strafing
     },
@@ -124,10 +140,12 @@ modules = {
         "slider_max1": 120,
         "slider_text1": "Timer:",
         "slider_default1": 60,
+        "slider_tooltip1": "The time in seconds before the player will be moved.",
         "slider_min2": 1,
         "slider_max2": 20,
         "slider_text2": "Randomize:",
         "slider_default2": 10,
+        "slider_tooltip2": "Randomize the timer.",
         "params": ["get_slider_value", "get_slider_value"],
         "command": thread_antiafk
     },
@@ -139,10 +157,34 @@ modules = {
         "params": [],
         "command": selfdestruct
     },
+    "LoadConfig": {
+        "name": "Load Config",
+        "category": MC.CONFIG,
+        "hotkey": False,
+        "toggle": False,
+        "label": 1,
+        "label_text1": "Load the settings from one of your saved config-files.",
+        "pbutton": 1,
+        "pbutton_category1": "Load",
+        "pbutton_params1": [],
+        "pbutton_command1": load_config
+    },
+    "SaveConfig": {
+        "name": "Save Config",
+        "category": MC.CONFIG,
+        "hotkey": False,
+        "toggle": False,
+        "label": 1,
+        "label_text1": "Save your current settings to a config-file.",
+        "pbutton": 1,
+        "pbutton_category1": "Save",
+        "pbutton_params1": [],
+        "pbutton_command1": save_config
+    },
     "ActiveWindow": {
         "name": "Active Window",
         "category": MC.SETTINGS,
-        "hotkey": True,
+        "hotkey": False,
         "toggle": True,
         "label": 1,
         "label_text1": "If the active window is not Minecraft, the modules will be paused.",
@@ -152,27 +194,11 @@ modules = {
     "PauseInMenu": {
         "name": "Pause Menu",
         "category": MC.SETTINGS,
-        "hotkey": True,
+        "hotkey": False,
         "toggle": True,
         "label": 1,
         "label_text1": "If you are in the inventory or game menu, the modules will be paused.",
         "params": [],
         "command": thread_menu
-    },
-    #"Controls": {
-    #    "name": "Controls",
-    #    "category": MC.SETTINGS,
-    #    "hotkey": False,
-    #    "toggle": False,
-    #    "label": 1,
-    #    "label_text1": "Change to your corresponding keys in minecraft, so the program will work correctly.",
-    #    "button": 5,
-    #    "button1": {"button_text": "Sprint", "value": "[SHIFT_L]"},
-    #    "button2": {"button_text": "Forward", "value": "[W]"},
-    #    "button3": {"button_text": "Left", "value": "[A]"},
-    #    "button4": {"button_text": "Backward", "value": "[S]"},
-    #    "button5": {"button_text": "Right", "value": "[D]"},
-    #    "params": [],
-    #    "command": controls
-    #}
+    }
 }

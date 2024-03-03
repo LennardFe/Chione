@@ -44,7 +44,7 @@ def leftclick(self, module, clicks_per_second, randomize, shake, hold, blockhit,
     while self.module_states.get(module):
         interval = None
         left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000        
-        if self.only_on_active and not self.currently_in_menu:
+        if self.currently_in_foreground and not self.currently_in_menu:
             if hold and left_button_state:
                 rand_cps = clicks_per_second + random.randint(-randomize, randomize)
                 interval = 1 / ((rand_cps) if rand_cps > 0 else 1)
@@ -77,7 +77,7 @@ def rightclick(self, module, clicks_per_second, randomize, shake, hold, button):
     while self.module_states.get(module):
         interval = None
         right_button_state = win32api.GetAsyncKeyState(0x02)&0x8000
-        if self.only_on_active and not self.currently_in_menu:
+        if self.currently_in_foreground and not self.currently_in_menu:
             if hold and right_button_state:
                 rand_cps = clicks_per_second + random.randint(-randomize, randomize)
                 interval = 1 / ((rand_cps) if rand_cps > 0 else 1)

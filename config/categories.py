@@ -5,3 +5,4 @@ class ModuleCategory(StrEnum):
     MOTION = "⚡ Movement"
     MISC = "⭐ Misc."
     SETTINGS = "⚙️ Settings"
+    CONFIG = "🔧 Configs"

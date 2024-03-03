@@ -41,4 +41,5 @@ def on_key_press(self, key):
     for module, data in self.modules.items():
         if data["hotkey"] != False:
             if "hotkey" in data and data["hotkey"].lower() == key_char.lower():
-                toggle_and_execute(self, module)
+                if self.hotkeys_enabled:
+                    toggle_and_execute(self, module)

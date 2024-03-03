@@ -13,6 +13,7 @@ from utils.others import resource
 # Internal Imports - Configs
 from config.categories import ModuleCategory
 from config.modules import modules
+from gui.gui_tooltip import CreateToolTip
 from config.setup import *
 
 # Third-party Library Imports
@@ -34,6 +35,7 @@ class GUI:
         self.sliders = {}
         self.checkboxs = {}
         self.toggle_buttons = {}
+        self.hotkeys_enabled = True
         self.module_states = {module: False for module in self.modules}
 
         # Declare json file path for saving and loading setting
@@ -51,6 +53,8 @@ class GUI:
         # Load GUI assets
         self.on = tk.PhotoImage(file=resource(get_file_path("on.png")))
         self.off = tk.PhotoImage(file=resource(get_file_path("off.png")))
+        self.save = tk.PhotoImage(file=resource(get_file_path("save.png")))
+        self.load = tk.PhotoImage(file=resource(get_file_path("load.png")))
 
         # Set up keyboard listener
         self.listener = keyboard.Listener(on_press=lambda key: on_key_press(self, key))
@@ -58,7 +62,7 @@ class GUI:
 
         # Set up window listener
         self.focused_process = None
-        self.only_on_active = True
+        self.currently_in_foreground = True
         threading.Thread(target=window_listener, args=(self,), daemon=True).start()
 
         # Set up menu listener
@@ -98,7 +102,7 @@ class GUI:
         menu_frame.pack(side=tk.LEFT, fill=tk.Y)
 
         # Creating client name label
-        client_name_label = tk.Label(menu_frame, text=self.title, fg=FEATURE_COLOR, font=(FONT, 20, "bold"), bg=MENU_COLOR)
+        client_name_label = tk.Label(menu_frame, text=self.title, fg=FEATURE_COLOR, font=(FONT, FONT_SIZE_BIG_TITLE, "bold"), bg=MENU_COLOR)
         client_name_label.pack(pady=(3, 0), padx=5, anchor=tk.CENTER)
 
         # Creating option buttons
@@ -109,7 +113,7 @@ class GUI:
 
     def create_option_button(self, parent, option):
         button = tk.Button(parent, bg=MENU_COLOR, fg=FONT_COLOR, font=(FONT, FONT_SIZE_OPTIONS), relief=RELIEF_BASIC, text=option, activebackground=PRESS_COLOR, command=lambda opt=option: self.option_content(opt)) 
-        if option == "⚙️ Settings":
+        if option == "⚙️ Settings" or option ==  "🔧 Configs":
             button.pack(fill=tk.X, pady=0, ipady=10, side=tk.BOTTOM)
         else:
             button.pack(fill=tk.X, pady=0, ipady=10, side=tk.TOP)
@@ -165,9 +169,9 @@ class GUI:
 
         self.create_title_label(module_frame, module)
         self.create_label(module_frame, module)
-        self.create_button(module_frame, module)
         self.create_slider(module_frame, module)
         self.create_check_box(module_frame, module)
+        self.create_persist_button(module_frame, module)
         self.create_hotkey_button(module_frame, module)
         self.create_toggle_button(module_frame, module)
 
@@ -196,11 +200,15 @@ class GUI:
                 slider_text = module_name.get(f"slider_text{x+1}")
                 slider_step = module_name.get(f"slider_step{x+1}")
                 slider_default = module_name.get(f"slider_default{x+1}")
+                slider_tooltip = module_name.get(f"slider_tooltip{x+1}")
 
                 # Create slider
                 slider = tk.Scale(parent, bg=CONTENT_COLOR, fg=FONT_COLOR, relief=RELIEF_BASIC, highlightthickness=0, font=(FONT, FONT_SIZE_CONTENT), label=slider_text, from_=slider_min, to=slider_max, orient=tk.HORIZONTAL, resolution=slider_step)
                 slider.bind("<ButtonRelease-1>", (lambda _: retoggle(self, module)))
                 slider.pack(side=tk.TOP, fill=tk.X, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X)
+
+                # Display hover information
+                CreateToolTip(slider, slider_tooltip)
 
                 if name in self.sliders and self.sliders[name] is not None:
                     if isinstance(self.sliders[name], (int, float)):
@@ -219,12 +227,18 @@ class GUI:
         if self.modules.get(module).get("checkbox"):
             for x in range(self.modules.get(module).get("checkbox")):
 
+                # Get checkbox values
                 name = f"{module}_{x}"
                 checkbox_text = self.modules.get(module).get(f"checkbox_text{x+1}")
+                checkbox_tooltip = self.modules.get(module).get(f"checkbox_tooltip{x+1}")
                 checkbox_var = tk.BooleanVar()
 
+                # Create checkbox
                 checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, highlightthickness=0, command=lambda: retoggle(self, module))            
                 checkbox.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
+
+                # Display hover information
+                CreateToolTip(checkbox, checkbox_tooltip)
 
                 if name in self.checkboxs and self.checkboxs[name] is not None:
                     if isinstance(self.checkboxs[name], bool):
@@ -239,29 +253,18 @@ class GUI:
     def get_checkbox_value(self, module, x):
         return self.checkboxs[f"{module}_{x}"].get()
     
-    def create_button(self, parent, module):
-        # currently only adjusted for controls module
+    def create_persist_button(self, parent, module):
         module_name = self.modules.get(module)
-        if module_name.get("button") and not module_name.get("hotkey"):
-            for x in range(module_name.get("button")):
-                name = f"{module}_{x}"
-                button = module_name.get(f"button{x+1}")
+        if module_name.get("pbutton"):
+            for x in range(module_name.get("pbutton")):
 
-                text = button["button_text"]
-                value = button["value"]
-                full_text = f"{text}: {value}"
-                command = module_name.get("command") 
+                # Get persist button values
+                image = self.load if module_name.get("pbutton_category1") == "Load" else self.save
+                b_command = module_name.get(f"pbutton_command{x+1}") 
 
-                button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=full_text, activebackground=PRESS_COLOR, command=lambda name=name, text=text, key=value: command(self, module, name, text, key))
-                button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
-
-                if name in self.buttons and self.buttons[name] is not None:
-                    if isinstance(self.buttons[name], str):
-                        button.config(text=f"{text}: [{self.buttons[name]}]")
-                    else:
-                        button.config(text=self.buttons[name].cget("text"))
-
-                self.buttons[name] = button # keep track of all buttons to access them later
+                # Create button
+                button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: b_command(self, module))
+                button.pack(side=tk.BOTTOM, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
 
     def create_hotkey_button(self, parent, module):
         if self.modules.get(module).get("hotkey"):
@@ -273,6 +276,6 @@ class GUI:
         if self.modules.get(module).get("toggle"):
             image = self.on if self.module_states.get(module) else self.off
             toggle_button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: toggle_and_execute(self, module))
-            toggle_button.pack(pady=(CONTENT_PAD_Y, 2*CONTENT_PAD_X))
+            toggle_button.pack(side=tk.BOTTOM, pady=(CONTENT_PAD_Y, 2*CONTENT_PAD_Y))
         
             self.toggle_buttons[module] = toggle_button # keep track of all buttons to access them later

@@ -4,7 +4,7 @@ def autosprint(self, module):
     shift_pressed = False
 
     while self.module_states.get(module):
-        if self.only_on_active and not self.currently_in_menu:
+        if self.currently_in_foreground and not self.currently_in_menu:
             if keyboard.is_pressed('w'):
                 pyautogui.keyDown('shift')
                 shift_pressed = True
@@ -26,7 +26,7 @@ def wtap(self, module, delay, randomize, hold):
     previous_button_state = 0 
 
     while self.module_states.get(module):
-        if self.only_on_active and not self.currently_in_menu:
+        if self.currently_in_foreground and not self.currently_in_menu:
             left_button_state = win32api.GetKeyState(0x01)
 
             # Check if W Key is pressed and state of left button has changed
@@ -55,7 +55,7 @@ def strafing(self, module, delay, randomize, hold):
     previous_button_state = 0  
 
     while self.module_states.get(module):
-        if self.only_on_active and not self.currently_in_menu:
+        if self.currently_in_foreground and not self.currently_in_menu:
             left_button_state = win32api.GetKeyState(0x01)
 
             # Check if W Key is pressed and state of left button has changed

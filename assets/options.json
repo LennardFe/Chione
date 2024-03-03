@@ -24,7 +24,7 @@
         "name": "W-Tap",
         "hotkey": "f",
         "slider_0": 0.8,
-        "slider_1": 0.4,
+        "slider_1": 0.2,
         "slider_2": 0.1
     },
     {
@@ -45,11 +45,21 @@
         "hotkey": "o"
     },
     {
+        "name": "SaveConfig",
+        "hotkey": false,
+        "button_0": null
+    },
+    {
+        "name": "Load Config",
+        "hotkey": false,
+        "button_0": null
+    },
+    {
         "name": "ActiveWindow",
-        "hotkey": "None"
+        "hotkey": false
     },
     {
         "name": "PauseInMenu",
-        "hotkey": "None"
+        "hotkey": false
     }
 ]
