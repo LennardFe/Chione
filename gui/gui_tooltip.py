@@ -3,16 +3,18 @@ import tkinter as tk
 
 # copied and modified from https://stackoverflow.com/questions/3221956/how-do-i-display-tooltips-in-tkinter
 class CreateToolTip(object):
-    def __init__(self, widget, text='widget info'):
+    def __init__(self, widget, text, enabled):
         self.widget = widget
         self.text = text
+        self.tooltips_enabled = enabled
         self.widget.bind("<Enter>", self.enter)
         self.widget.bind("<Leave>", self.leave)
         self.id = None
         self.tw = None
 
     def enter(self, event=None):
-        self.schedule()
+        if self.tooltips_enabled:
+            self.schedule()
 
     def leave(self, event=None):
         self.unschedule()

@@ -15,6 +15,13 @@ def anti_afk(self, module, timer, randomize):
 def thread_antiafk(self, module, timer, randomize):
     threading.Thread(target=anti_afk, args=(self, module, timer, randomize), daemon=True).start()
 
-def selfdestruct(self, _):
-    #save_settings(self, self.json_file) this results in: can't invoke "destroy" command: application has been destroyed
+def selfdestruct(self, _, delete_everything, safe_cleanup):
+    save_settings(self, self.json_file)
     self.root.destroy()
+    if delete_everything:
+        # delete all config files
+        # delete the program itself
+        pass
+    if safe_cleanup:
+        # check for tmp-files and other stuff
+        pass

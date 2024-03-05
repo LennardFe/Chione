@@ -1,6 +1,6 @@
 # Internal Imports - Utils
+from utils.listener import window_listener, set_settings
 from utils.hotkeys import set_hotkey, on_key_press
-from utils.listener import window_listener
 from utils.options import load_settings
 from utils.options import save_settings
 from utils.process import check_minecraft
@@ -12,8 +12,8 @@ from utils.others import resource
 
 # Internal Imports - Configs
 from config.categories import ModuleCategory
-from config.modules import modules
 from gui.gui_tooltip import CreateToolTip
+from config.modules import modules
 from config.setup import *
 
 # Third-party Library Imports
@@ -36,6 +36,7 @@ class GUI:
         self.checkboxs = {}
         self.toggle_buttons = {}
         self.hotkeys_enabled = True
+        self.tooltips_enabled = True
         self.module_states = {module: False for module in self.modules}
 
         # Declare json file path for saving and loading setting
@@ -70,6 +71,9 @@ class GUI:
 
         # Load settings
         load_settings(self, self.json_file)
+
+        # Set settings
+        set_settings(self)
 
         # Create GUI widgets
         self.create_widgets()
@@ -171,7 +175,7 @@ class GUI:
         self.create_label(module_frame, module)
         self.create_slider(module_frame, module)
         self.create_check_box(module_frame, module)
-        self.create_persist_button(module_frame, module)
+        self.create_button(module_frame, module)
         self.create_hotkey_button(module_frame, module)
         self.create_toggle_button(module_frame, module)
 
@@ -183,11 +187,12 @@ class GUI:
         module_name = self.modules.get(module)
         if module_name.get("label"):
             for x in range(module_name.get("label")):
-
                 label_text = module_name.get(f"label_text{x+1}")
                 label = tk.Label(parent, text=label_text, fg=FONT_COLOR, font=(FONT, FONT_SIZE_CONTENT), bg=CONTENT_COLOR, wraplength=LENGTH, width=WIDTH)
-                label.pack(pady=CONTENT_PAD_Y)
-
+                label.pack(fill=tk.BOTH, expand=True, pady=CONTENT_PAD_Y)
+                if(module_name.get(f"label_link{x+1}")):
+                    label.bind("<Button-1>", lambda e, link=f"label_link{x+1}": open_web(module_name.get(link)))
+                    
     def create_slider(self, parent, module):
         module_name = self.modules.get(module)
         if module_name.get("slider"):
@@ -208,7 +213,7 @@ class GUI:
                 slider.pack(side=tk.TOP, fill=tk.X, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X)
 
                 # Display hover information
-                CreateToolTip(slider, slider_tooltip)
+                CreateToolTip(slider, slider_tooltip, self.tooltips_enabled)
 
                 if name in self.sliders and self.sliders[name] is not None:
                     if isinstance(self.sliders[name], (int, float)):
@@ -224,21 +229,27 @@ class GUI:
         return self.sliders[f"{module}_{x}"].get()
 
     def create_check_box(self, parent, module):
-        if self.modules.get(module).get("checkbox"):
-            for x in range(self.modules.get(module).get("checkbox")):
+        module_name = self.modules.get(module)
+        if module_name.get("checkbox"):
+            for x in range(module_name.get("checkbox")):
 
                 # Get checkbox values
                 name = f"{module}_{x}"
-                checkbox_text = self.modules.get(module).get(f"checkbox_text{x+1}")
-                checkbox_tooltip = self.modules.get(module).get(f"checkbox_tooltip{x+1}")
+                checkbox_text = module_name.get(f"checkbox_text{x+1}")
+                checkbox_tooltip = module_name.get(f"checkbox_tooltip{x+1}")
                 checkbox_var = tk.BooleanVar()
 
                 # Create checkbox
-                checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, highlightthickness=0, command=lambda: retoggle(self, module))            
+                if module_name.get(f"checkbox_command{x+1}"):
+                    cb_command = module_name.get(f"checkbox_command{x+1}")
+                    checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, activebackground=PRESS_COLOR, highlightthickness=0, command=lambda cb=cb_command, var=checkbox_var: cb(self, module, var.get()))
+                else:
+                    checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, activebackground=PRESS_COLOR, highlightthickness=0, command=lambda: retoggle(self, module))            
+                
                 checkbox.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
 
                 # Display hover information
-                CreateToolTip(checkbox, checkbox_tooltip)
+                CreateToolTip(checkbox, checkbox_tooltip, self.tooltips_enabled)
 
                 if name in self.checkboxs and self.checkboxs[name] is not None:
                     if isinstance(self.checkboxs[name], bool):
@@ -253,18 +264,28 @@ class GUI:
     def get_checkbox_value(self, module, x):
         return self.checkboxs[f"{module}_{x}"].get()
     
-    def create_persist_button(self, parent, module):
+    def create_button(self, parent, module):
         module_name = self.modules.get(module)
-        if module_name.get("pbutton"):
-            for x in range(module_name.get("pbutton")):
+        if module_name.get("button"):
+            for x in range(module_name.get("button")):
 
-                # Get persist button values
-                image = self.load if module_name.get("pbutton_category1") == "Load" else self.save
-                b_command = module_name.get(f"pbutton_command{x+1}") 
+                # Get button values
+                if(module_name.get(f"button_img{x+1}")):
+                    image = self.load if module_name.get(f"button_img{x+1}") == "Load" else self.save
+                    b_command = module_name.get(f"button_command{x+1}") 
+                    button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: b_command(self, module))
+                    button.pack(side=tk.BOTTOM, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
 
-                # Create button
-                button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: b_command(self, module))
-                button.pack(side=tk.BOTTOM, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
+                else:
+                    button_text = module_name.get(f"button_text{x+1}")
+                    button_command = module_name.get(f"button_command{x+1}")
+                    button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=button_text, activebackground=PRESS_COLOR, command=lambda: button_command(self, module))
+                    button.pack(side=tk.TOP, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)     
+
+                # Display hover information
+                if module_name.get(f"button_tooltip{x+1}"):
+                    button_tooltip = module_name.get(f"button_tooltip{x+1}")
+                    CreateToolTip(button, button_tooltip, self.tooltips_enabled) 
 
     def create_hotkey_button(self, parent, module):
         if self.modules.get(module).get("hotkey"):

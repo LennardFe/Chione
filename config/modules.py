@@ -2,7 +2,7 @@ from modules.autoclicker import thread_lclick, thread_rclick
 from modules.movement import thread_autosprint, thread_wtap, thread_strafing
 from modules.misc import thread_antiafk, selfdestruct
 from modules.configs import save_config, load_config
-from modules.settings import thread_window, thread_menu
+from modules.settings import thread_window, thread_menu, hide_taskbar, dis_tooltips, on_top, reset_settings
 from config.categories import ModuleCategory as MC
 
 modules = {
@@ -154,7 +154,10 @@ modules = {
         "category": MC.MISC,
         "hotkey": True,
         "toggle": True,
-        "params": [],
+        "checkbox": 1,
+        "checkbox_text1": "Delete everything",
+        "checkbox_tooltip1": "Check this to also delete all config files and the program itself.",
+        "params": ["get_checkbox_value"],
         "command": selfdestruct
     },
     "LoadConfig": {
@@ -164,10 +167,10 @@ modules = {
         "toggle": False,
         "label": 1,
         "label_text1": "Load the settings from one of your saved config-files.",
-        "pbutton": 1,
-        "pbutton_category1": "Load",
-        "pbutton_params1": [],
-        "pbutton_command1": load_config
+        "button": 1,
+        "button_img1": "Load",
+        "button_params1": [],
+        "button_command1": load_config
     },
     "SaveConfig": {
         "name": "Save Config",
@@ -176,29 +179,49 @@ modules = {
         "toggle": False,
         "label": 1,
         "label_text1": "Save your current settings to a config-file.",
-        "pbutton": 1,
-        "pbutton_category1": "Save",
-        "pbutton_params1": [],
-        "pbutton_command1": save_config
+        "button": 1,
+        "button_img1": "Save",
+        "button_params1": [],
+        "button_command1": save_config
     },
-    "ActiveWindow": {
-        "name": "Active Window",
+    "General": {
+        "name": "General",
         "category": MC.SETTINGS,
         "hotkey": False,
-        "toggle": True,
-        "label": 1,
-        "label_text1": "If the active window is not Minecraft, the modules will be paused.",
-        "params": [],
-        "command": thread_window
+        "toggle": False,
+        "checkbox": 5,
+        "checkbox_text1": "Hide from Taskbar",
+        "checkbox_tooltip1": "Hide the program from the taskbar.",
+        "checkbox_command1": hide_taskbar,
+        "checkbox_text2": "Disable Tooltips",
+        "checkbox_tooltip2": "Disable all tooltips.",
+        "checkbox_command2": dis_tooltips,
+        "checkbox_text3": "Pause in Menu",
+        "checkbox_tooltip3": "Pause all modules when in the game menu, inv. or chat.",
+        "checkbox_command3": thread_menu,
+        "checkbox_text4": "Only in Focus",
+        "checkbox_tooltip4": "Pause all modules when the focussed window is not Minecraft.",
+        "checkbox_command4": thread_window,
+        "checkbox_text5": "Always on Top",
+        "checkbox_tooltip5": "Keep the program always on top.",
+        "checkbox_command5": on_top,
+        "button": 1,
+        "button_text1": "Reset Program",
+        "button_tooltip1": "Reset & closes the program. May help with some bugs.",
+        "button_command1": reset_settings
     },
-    "PauseInMenu": {
-        "name": "Pause Menu",
+    "About": {
+        "name": "About",
         "category": MC.SETTINGS,
         "hotkey": False,
-        "toggle": True,
-        "label": 1,
-        "label_text1": "If you are in the inventory or game menu, the modules will be paused.",
-        "params": [],
-        "command": thread_menu
+        "toggle": False,
+        "label": 4,
+        "label_text1": "Chione is a python-based, free and open-source autoclicker and macro assistant. Be aware that using this software may be prohibited by some servers. Use at your own risk.",
+        "label_text2": "If you find any bugs or have suggestions, please report them to the GitHub page:\n'vs-marshall/Chione'",
+        "label_link2": "https://github.com/vs-marshall/Chione",
+        "label_text3": "Discord:\n'marshall.com'",
+        "label_link3": "https://discord.gg/HpA7JdP3uq",
+        "label_text4": "GitHub:\n'vs-marshall'",
+        "label_link4": "https://github.com/vs-marshall"
     }
 }
