@@ -14,7 +14,7 @@
 
 <h2 align="center">Screenshots</h2>
 
-![image](https://github.com/vs-marshall/Chione/assets/78146861/d434ac9b-96a9-4876-944b-0fd0303358bf)
+![front1](https://github.com/vs-marshall/Chione/assets/78146861/37c7e98f-e8b1-4f9d-b9de-9e9478b565ed)
 ![image](https://github.com/vs-marshall/Chione/assets/78146861/4ebb5697-cb38-434d-b43e-12976c082a42)
 
 <h2 align="center">Installation</h2>
@@ -29,7 +29,7 @@
 <p>Navigate to the <a href="https://github.com/vs-marshall/Chione/tree/main/output">output</a> folder containing the <a href="https://github.com/vs-marshall/Chione/blob/main/output/Chione.exe">Chione.exe</a> file, click on the .exe and then on the three dots at the top right, as shown in the picture below. Then click on <b>download</b>. This is it; the program should work as intended. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!</p>
 </div>
 
-![image](https://github.com/vs-marshall/Chione/assets/78146861/4e87dae6-ab53-4961-ab40-b21b161076a0)
+![download](https://github.com/vs-marshall/Chione/assets/78146861/003dd8e3-42ce-4328-b485-798fa47d5a40)
 
 <h3 align="center">For Developers:</h3>
 
@@ -62,7 +62,7 @@ python -m venv .venv
 </div>
 
 ```
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 <div align="justify">
