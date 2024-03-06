@@ -8,14 +8,14 @@
 <h2 align="center">Features</h2>
 
 <div align="justify">
-<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. In the settings the user can set the option, that all modules halt in menus (incl. inventory & chat) and activate only when Minecraft is in the foreground.</p>
+<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. The settings provide customizability so you can adjust the program to your likings, like stopping all modules while in the menu and only activating them while the active window is Minecraft. Additionally, tooltips should explain all functionality.</p>
 </div>
 
 
 <h2 align="center">Screenshots</h2>
 
-![front1](https://github.com/vs-marshall/Chione/assets/78146861/37c7e98f-e8b1-4f9d-b9de-9e9478b565ed)
-![image](https://github.com/vs-marshall/Chione/assets/78146861/4ebb5697-cb38-434d-b43e-12976c082a42)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/e17c76ff-38bc-4eae-b215-fdbb2caf0b5f)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/341490c8-f573-4227-86d7-d6017dfd7760)
 
 <h2 align="center">Installation</h2>
 
@@ -26,7 +26,7 @@
 </div>
 
 <div align="justify">
-<p>Navigate to the <a href="https://github.com/vs-marshall/Chione/tree/main/output">output</a> folder containing the <a href="https://github.com/vs-marshall/Chione/blob/main/output/Chione.exe">Chione.exe</a> file, click on the .exe and then on the three dots at the top right, as shown in the picture below. Then click on <b>download</b>. This is it; the program should work as intended. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!</p>
+<p>Navigate to the <a href="https://github.com/vs-marshall/Chione/tree/main/output">output</a> folder containing the <a href="https://github.com/vs-marshall/Chione/blob/main/output/Chione.exe">Chione.exe</a> file, click on the .exe and then on the three dots at the top right, as shown in the picture below. Then click on <b>download</b>. The download takes a few seconds to start. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!</p>
 </div>
 
 ![download](https://github.com/vs-marshall/Chione/assets/78146861/003dd8e3-42ce-4328-b485-798fa47d5a40)
