@@ -1,5 +1,4 @@
 import random, threading, time, win32api, win32gui, win32con
-from pynput.mouse import Controller
 
 def find_win_pos():
     title = win32gui.FindWindow(None, win32gui.GetWindowText(win32gui.GetForegroundWindow()))
@@ -38,9 +37,7 @@ def shake_effect(shake):
     new_pos = (currentPos[0] + x_adjust * pixels, currentPos[1] + y_adjust * pixels)
     win32api.SetCursorPos(new_pos)
 
-def leftclick(self, module, clicks_per_second, randomize, shake, hold, blockhit, button):
-    last_blockhit_time = 0
-
+def leftclick(self, module, clicks_per_second, randomize, shake, blockhit, hold, button):
     while self.module_states.get(module):
         interval = None
         left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000        
@@ -50,28 +47,24 @@ def leftclick(self, module, clicks_per_second, randomize, shake, hold, blockhit,
                 interval = 1 / ((rand_cps) if rand_cps > 0 else 1)
                 title, param = find_win_pos()
                 click_mouse(title, param, button)
-                current_time = time.time()  # Get the current time
-                if blockhit and (current_time - last_blockhit_time >= (1 + (random.randint(-1,1))/5)):  # Check if 1 second has elapsed
+                if (random.randint(1, 200) <= blockhit):  # 200 so it's not too often
                     click_mouse(title, param, button="right")
-                    last_blockhit_time = current_time
                 shake_effect(shake)
 
             elif not hold:
                 interval = random.uniform(0.4, 1.6) / clicks_per_second if randomize else 1 / clicks_per_second
                 title, param = find_win_pos()
                 click_mouse(title, param, button)
-                current_time = time.time() 
-                if blockhit and current_time - last_blockhit_time >= 1:  # Check if 1 second has elapsed
+                if random.randint(1, 200) <= blockhit:  # 200 so it's not too often
                     click_mouse(title, param, button="right")
-                    last_blockhit_time = current_time 
                 shake_effect(shake)
             
             time.sleep(interval) if interval is not None else time.sleep(0.1)
         else:
             time.sleep(0.1)
 
-def thread_lclick(self, module, slider, randomize, shake, hold, blockhit, button="left"):
-    threading.Thread(target=leftclick, args=(self, module, slider, randomize, shake, hold, blockhit, button), daemon=True).start()
+def thread_lclick(self, module, slider, randomize, shake, blockhit, hold, button="left"):
+    threading.Thread(target=leftclick, args=(self, module, slider, randomize, shake, blockhit, hold, button), daemon=True).start()
 
 def rightclick(self, module, clicks_per_second, randomize, shake, hold, button):
     while self.module_states.get(module):

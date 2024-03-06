@@ -115,7 +115,7 @@ class GUI:
             button = self.create_option_button(menu_frame, option)
             self.option_buttons.append(button)
 
-    def create_option_button(self, parent, option):
+    def create_option_button(self, parent, option): # TODO: Anchor W?
         button = tk.Button(parent, bg=MENU_COLOR, fg=FONT_COLOR, font=(FONT, FONT_SIZE_OPTIONS), relief=RELIEF_BASIC, text=option, activebackground=PRESS_COLOR, command=lambda opt=option: self.option_content(opt)) 
         if option == "⚙️ Settings" or option ==  "🔧 Configs":
             button.pack(fill=tk.X, pady=0, ipady=10, side=tk.BOTTOM)
@@ -269,6 +269,9 @@ class GUI:
         if module_name.get("button"):
             for x in range(module_name.get("button")):
 
+                # Get button name
+                name = f"{module}_{x}"
+
                 # Get button values
                 if(module_name.get(f"button_img{x+1}")):
                     image = self.load if module_name.get(f"button_img{x+1}") == "Load" else self.save
@@ -279,13 +282,21 @@ class GUI:
                 else:
                     button_text = module_name.get(f"button_text{x+1}")
                     button_command = module_name.get(f"button_command{x+1}")
-                    button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=button_text, activebackground=PRESS_COLOR, command=lambda: button_command(self, module))
-                    button.pack(side=tk.TOP, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)     
+                    button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=button_text, activebackground=PRESS_COLOR, command=lambda bt=button_text, name=name: button_command(self, module, name, bt))
+                    button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X, pady=2*CONTENT_PAD_Y)     
 
                 # Display hover information
                 if module_name.get(f"button_tooltip{x+1}"):
                     button_tooltip = module_name.get(f"button_tooltip{x+1}")
                     CreateToolTip(button, button_tooltip, self.tooltips_enabled) 
+
+                if name in self.buttons and self.buttons[name] is not None:
+                    if isinstance(self.buttons[name], str):
+                        button.config(text=f"{self.buttons[name]}")
+                    else:
+                        button.config(text=self.buttons[name].cget("text"))
+
+                self.buttons[name] = button 
 
     def create_hotkey_button(self, parent, module):
         if self.modules.get(module).get("hotkey"):

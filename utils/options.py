@@ -65,7 +65,7 @@ def save_logic(self, path):
         # Check if the module has a button, then include button data
         for x in range(module_info.get("button", 0)):
             button_text = self.buttons.get(f"{module_name}_{x}")
-            module_data[f"button_{x}"] = button_text if isinstance(button_text, str) else (re.search(r'\[([^\]]+)\]', button_text.cget("text")).group(1)) if button_text else None
+            module_data[f"button_{x}"] = button_text if isinstance(button_text, str) else button_text.cget("text") if button_text else None
 
         # Append module data to the list
         modules_data.append(module_data)

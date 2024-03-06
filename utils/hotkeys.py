@@ -3,6 +3,7 @@ from utils.others import resource
 from utils.executor import *
 from config.setup import *
 import tkinter as tk
+import re
 
 def set_hotkey(self, button, module):
     popup = tk.Toplevel()
@@ -43,3 +44,20 @@ def on_key_press(self, key):
             if "hotkey" in data and data["hotkey"].lower() == key_char.lower():
                 if self.hotkeys_enabled:
                     toggle_and_execute(self, module)
+
+def get_controls(self, action_key, default):
+    key = self.buttons.get(action_key, default)
+    if isinstance(key, str):
+        key = re.sub(r'^\[|\]$', '', key)
+        return key
+    else:
+        key_text = key.cget("text")
+        key_text = re.sub(r'^\[|\]$', '', key_text)
+        return key_text
+    
+# goofy solution, the problem is tkinter and pyautogui use different names for the same key
+def check_special_chars(key):
+    if key == "Control": return "ctrl"
+    elif key == "Caps": return "capslock"
+    else: return key 
+

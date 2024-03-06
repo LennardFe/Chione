@@ -38,6 +38,7 @@ class CreateToolTip(object):
         self.tw = tk.Toplevel(self.widget)
         self.tw.wm_overrideredirect(True)
         self.tw.wm_geometry("+%d+%d" % (x, y))
+        self.tw.wm_attributes("-topmost", 1)
         label = tk.Label(self.tw, text=self.text, justify=TEXT_JUSTIFY,
                        bg=CONTENT_COLOR,fg=FONT_COLOR, relief=RELIEF_FANCY, 
                        highlightthickness=0, font=(FONT, FONT_SIZE_CONTENT), 

@@ -2,7 +2,7 @@ from modules.autoclicker import thread_lclick, thread_rclick
 from modules.movement import thread_autosprint, thread_wtap, thread_strafing
 from modules.misc import thread_antiafk, selfdestruct
 from modules.configs import save_config, load_config
-from modules.settings import thread_window, thread_menu, hide_taskbar, dis_tooltips, on_top, reset_settings
+from modules.settings import thread_window, thread_menu, hide_taskbar, dis_tooltips, on_top, reset_settings, set_controls
 from config.categories import ModuleCategory as MC
 
 modules = {
@@ -11,7 +11,7 @@ modules = {
         "category": MC.COMBAT,
         "hotkey": True,
         "toggle": True,
-        "slider": 3,
+        "slider": 4,
         "slider_min1": 1,
         "slider_max1": 40,
         "slider_text1": "CPS:",
@@ -30,12 +30,16 @@ modules = {
         "slider_step3": 1,
         "slider_default3": 2,
         "slider_tooltip3": "Shake the mouse while leftclicking.",
-        "checkbox": 2,
+        "slider_min4": 0,
+        "slider_max4": 100,
+        "slider_text4": "Blockhit (%):",
+        "slider_step4": 1,
+        "slider_default4": 10,
+        "slider_tooltip4": "Chance to blockhit.",
+        "checkbox": 1,
         "checkbox_text1": "Hold Leftclick",
         "checkbox_tooltip1": "Click while holding leftclick.",
-        "checkbox_text2": "Blockhit",
-        "checkbox_tooltip2": "Enable blockhit in one second intervals.",
-        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value", "get_checkbox_value"], 
+        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value"], 
         "command": thread_lclick
     },
     "RightClicker": {
@@ -156,7 +160,7 @@ modules = {
         "toggle": True,
         "checkbox": 1,
         "checkbox_text1": "Delete everything",
-        "checkbox_tooltip1": "Check this to also delete all config files and the program itself.",
+        "checkbox_tooltip1": "Check this to also delete all config files and Chione itself.",
         "params": ["get_checkbox_value"],
         "command": selfdestruct
     },
@@ -191,7 +195,7 @@ modules = {
         "toggle": False,
         "checkbox": 5,
         "checkbox_text1": "Hide from Taskbar",
-        "checkbox_tooltip1": "Hide the program from the taskbar.",
+        "checkbox_tooltip1": "Hide Chione from the taskbar.",
         "checkbox_command1": hide_taskbar,
         "checkbox_text2": "Disable Tooltips",
         "checkbox_tooltip2": "Disable all tooltips.",
@@ -203,12 +207,36 @@ modules = {
         "checkbox_tooltip4": "Pause all modules when the focussed window is not Minecraft.",
         "checkbox_command4": thread_window,
         "checkbox_text5": "Always on Top",
-        "checkbox_tooltip5": "Keep the program always on top.",
+        "checkbox_tooltip5": "Keep Chione always on top.",
         "checkbox_command5": on_top,
         "button": 1,
-        "button_text1": "Reset Program",
-        "button_tooltip1": "Reset & closes the program. May help with some bugs.",
+        "button_text1": "Reset Chione",
+        "button_tooltip1": "Reset & closes Chione. May help with some bugs.",
         "button_command1": reset_settings
+    },
+    "Controls": {
+        "name": "Controls",
+        "category": MC.SETTINGS,
+        "hotkey": False,
+        "toggle": False,
+        "label": 1,
+        "label_text1": "Change to your corresponding keys in minecraft, so Chione will work correctly.",
+        "button": 5,
+        "button_text1": "[SHIFT]",
+        "button_tooltip1": "Sprint-Key:",
+        "button_command1": set_controls,
+        "button_text2": "[W]",
+        "button_tooltip2": "Forward-Key:",
+        "button_command2": set_controls,
+        "button_text3": "[A]",
+        "button_tooltip3": "Left-Key:",
+        "button_command3": set_controls,
+        "button_text4": "[S]",
+        "button_tooltip4": "Backward-Key:",
+        "button_command4": set_controls,
+        "button_text5": "[D]",
+        "button_tooltip5": "Right-Key:",
+        "button_command5": set_controls
     },
     "About": {
         "name": "About",
@@ -217,11 +245,10 @@ modules = {
         "toggle": False,
         "label": 4,
         "label_text1": "Chione is a python-based, free and open-source autoclicker and macro assistant. Be aware that using this software may be prohibited by some servers. Use at your own risk.",
-        "label_text2": "If you find any bugs or have suggestions, please report them to the GitHub page:\n'vs-marshall/Chione'",
-        "label_link2": "https://github.com/vs-marshall/Chione",
+        "label_text2": "If you find any bugs or have suggestions, please report them on the GitHub page or Discord server.",
         "label_text3": "Discord:\n'marshall.com'",
         "label_link3": "https://discord.gg/HpA7JdP3uq",
         "label_text4": "GitHub:\n'vs-marshall'",
-        "label_link4": "https://github.com/vs-marshall"
+        "label_link4": "https://github.com/vs-marshall/Chione"
     }
 }

@@ -23,6 +23,3 @@ def get_file_path(filename):
         file_path = os.path.join(parent_dir, "assets", filename)
     
     return file_path
-
-def reset(self):
-    self.root.destroy()

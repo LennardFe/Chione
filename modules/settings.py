@@ -1,7 +1,10 @@
-import threading, time, win32gui, os
+from utils.hotkeys import check_special_chars
 from utils.options import get_user_path
-from utils.others import reset
+from utils.others import get_file_path
+from utils.others import resource
+import threading, time, win32gui, os
 from config.setup import *
+import tkinter as tk
 
 def active_window(self, _, var):
     while var:
@@ -37,9 +40,36 @@ def dis_tooltips(self, _, var):
 def on_top(self, _, var):
     self.root.attributes("-topmost", var)
 
-def reset_settings(self, _):
+def reset_settings(self, _, button_name=None, text_value=None):
     try:
         os.remove(get_user_path(self.json_file))
-        reset(self)
+        self.root.destroy()
     except FileNotFoundError:
         pass
+
+def set_controls(self, _, button_name, text_value):
+    popup = tk.Toplevel()
+    popup.title(f"Set new Key")
+    popup.geometry("400x200")
+    popup.configure(bg=CONTENT_COLOR)
+    popup.iconbitmap(resource(get_file_path("icon.ico")))
+    popup.resizable(False, False)
+    popup.attributes("-topmost", True)
+
+    def set_key(event):
+        key = event.keysym
+        if key == "Escape":
+            self.buttons[button_name].config(text=f"None")
+            popup.destroy()
+        else:
+            key = key.split('_')[0]
+            key = check_special_chars(key)
+            self.buttons[button_name].config(text=f"[{key.upper()}]")
+            popup.destroy()
+
+    popup.bind("<KeyPress>", set_key)
+
+    label = tk.Label(popup, text=f"Press a key", font=(FONT, 12), fg=FONT_COLOR, bg=CONTENT_COLOR)
+    label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+    popup.focus_force()
