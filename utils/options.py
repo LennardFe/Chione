@@ -1,4 +1,5 @@
-import json, re, os
+from config.setup import MIN_SIZE_W, MIN_SIZE_H
+import json, os
 
 def get_user_path(json_file):
     filename = os.path.basename(json_file)
@@ -9,6 +10,9 @@ def get_user_path(json_file):
 def load_logic(self, path):
     with open(path, 'r') as file:
         modules_data = json.load(file)
+
+    # Set program width and height
+    self.root.geometry(f"{modules_data[0].get('width', MIN_SIZE_W)}x{modules_data[0].get('height', MIN_SIZE_H)}")
 
     for module_data in modules_data:
         module_name = module_data.get("name")
@@ -46,6 +50,9 @@ def load_settings(self, json_file):
 def save_logic(self, path):
     modules_data = []
 
+    # Include program width and height
+    modules_data.append({"width": self.root.winfo_width(), "height": self.root.winfo_height()})
+
     for module_name, module_info in self.modules.items():
         module_data = {
             "name": module_name,
@@ -64,8 +71,17 @@ def save_logic(self, path):
 
         # Check if the module has a button, then include button data
         for x in range(module_info.get("button", 0)):
-            button_text = self.buttons.get(f"{module_name}_{x}")
-            module_data[f"button_{x}"] = button_text if isinstance(button_text, str) else button_text.cget("text") if button_text else None
+            button = self.buttons.get(f"{module_name}_{x}")
+            if isinstance(button, str):
+                module_data[f"button_{x}"] = button
+            else:
+                if button:
+                    try:
+                        module_data[f"button_{x}"] = button.cget("text")
+                    except:
+                        print(f"Button {x} in module {module_name} has no text attribute.")
+                else:
+                    module_data[f"button_{x}"] = None
 
         # Append module data to the list
         modules_data.append(module_data)

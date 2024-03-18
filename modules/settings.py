@@ -6,18 +6,25 @@ import threading, time, win32gui, os
 from config.setup import *
 import tkinter as tk
 
-def active_window(self, _, var):
-    while var:
+global_window_var : bool # TODO: temporary fix for threading
+global_menu_var : bool
+
+def active_window(self, _):
+    global global_window_var
+    while global_window_var:
         if self.focused_process is not None:
             self.currently_in_foreground = "java" in self.focused_process.lower()
         time.sleep(0.1)
     self.currently_in_foreground = True
     
 def thread_window(self, _, var):
-    threading.Thread(target=active_window, args=(self, _, var), daemon=True).start()
+    global global_window_var 
+    global_window_var = var
+    threading.Thread(target=active_window, args=(self, _), daemon=True).start()
 
-def active_menu(self, _, var):
-    while var:
+def active_menu(self, _):
+    global global_menu_var
+    while global_menu_var:
         cursorInfo = win32gui.GetCursorInfo()[1]
         # goofy way to check if the user is in a menu, copied from another repo
         if cursorInfo > 50000 and cursorInfo < 100000:
@@ -29,7 +36,9 @@ def active_menu(self, _, var):
     self.currently_in_menu = False
 
 def thread_menu(self, _, var):
-    threading.Thread(target=active_menu, args=(self, _, var), daemon=True).start()
+    global global_menu_var
+    global_menu_var = var
+    threading.Thread(target=active_menu, args=(self, _), daemon=True).start()
 
 def hide_taskbar(self, _, var):
     self.root.overrideredirect(var)

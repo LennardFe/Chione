@@ -6,7 +6,7 @@ def autosprint(self, module):
 
     while self.module_states.get(module):
         if self.currently_in_foreground and not self.currently_in_menu:
-            if keyboard.is_pressed(get_controls(self, "Controls_1", "W")):
+            if keyboard.is_pressed(get_controls(self, "Controls_2", "W")):
                 pyautogui.keyDown(get_controls(self, "Controls_0", "SHIFT"))
                 shift_pressed = True
             elif shift_pressed:
@@ -31,13 +31,13 @@ def wtap(self, module, delay, randomize, hold):
             left_button_state = win32api.GetKeyState(0x01)
 
             # Check if W Key is pressed and state of left button has changed
-            if keyboard.is_pressed(get_controls(self, "Controls_1", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
-                keyboard.block_key(get_controls(self, "Controls_1", "W")) # Block the w key to prevent user inputs
-                pyautogui.keyUp(get_controls(self, "Controls_1", "W"))
+            if keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
+                keyboard.block_key(get_controls(self, "Controls_2", "W")) # Block the w key to prevent user inputs
+                pyautogui.keyUp(get_controls(self, "Controls_2", "W"))
                 time.sleep(hold) 
-                keyboard.unblock_key(get_controls(self, "Controls_1", "W")) # Unblock or no w for you lol
-                if keyboard.is_pressed(get_controls(self, "Controls_1", "W")):  # Make sure the w key is still pressed by the user
-                    pyautogui.keyDown(get_controls(self, "Controls_1", "W"))
+                keyboard.unblock_key(get_controls(self, "Controls_2", "W")) # Unblock or no w for you lol
+                if keyboard.is_pressed(get_controls(self, "Controls_2", "W")):  # Make sure the w key is still pressed by the user
+                    pyautogui.keyDown(get_controls(self, "Controls_2", "W"))
 
             # Update the previous button state
             previous_button_state = left_button_state
@@ -52,7 +52,7 @@ def thread_wtap(self, module, slider, randomize, hold):
     threading.Thread(target=wtap, args=(self, module, slider, randomize, hold), daemon=True).start()
 
 def strafing(self, module, delay, randomize, hold):
-    last_key_pressed = random.choice([get_controls(self, "Controls_2", "a"), get_controls(self, "Controls_4", "d")])
+    last_key_pressed = random.choice([get_controls(self, "Controls_3", "a"), get_controls(self, "Controls_5", "d")])
     previous_button_state = 0  
 
     while self.module_states.get(module):
@@ -60,8 +60,8 @@ def strafing(self, module, delay, randomize, hold):
             left_button_state = win32api.GetKeyState(0x01)
 
             # Check if W Key is pressed and state of left button has changed
-            if keyboard.is_pressed(get_controls(self, "Controls_1", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
-                key_to_press = get_controls(self, "Controls_4", "D") if last_key_pressed == get_controls(self, "Controls_2", "A") else get_controls(self, "Controls_2", "A")
+            if keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
+                key_to_press = get_controls(self, "Controls_5", "D") if last_key_pressed == get_controls(self, "Controls_3", "A") else get_controls(self, "Controls_3", "A")
 
                 pyautogui.keyDown(key_to_press)
                 time.sleep(hold)

@@ -3,7 +3,6 @@ from utils.listener import window_listener, set_settings
 from utils.hotkeys import set_hotkey, on_key_press
 from utils.options import load_settings
 from utils.options import save_settings
-from utils.process import check_minecraft
 from utils.executor import toggle_and_execute
 from utils.executor import retoggle
 from utils.others import get_file_path
@@ -12,7 +11,9 @@ from utils.others import resource
 
 # Internal Imports - Configs
 from config.categories import ModuleCategory
+from gui.gui_checkbox import CustomCheckbox
 from gui.gui_tooltip import CreateToolTip
+from gui.gui_titlebar import new_titlebar
 from config.modules import modules
 from config.setup import *
 
@@ -47,6 +48,7 @@ class GUI:
         self.root.title(title)
         self.root.minsize(MIN_SIZE_W, MIN_SIZE_H)
         self.root.geometry(WINDOW_SIZE)
+        self.root.resizable(False, False)
         self.root.configure(bg=CONTENT_COLOR)
         self.root.iconbitmap(resource(get_file_path("icon.ico")))
         self.root.protocol("WM_DELETE_WINDOW", lambda: save_settings(self, self.json_file))
@@ -77,6 +79,11 @@ class GUI:
 
         # Create GUI widgets
         self.create_widgets()
+
+        # Set default page on startup
+        self.option_content(DEFAULT_PAGE)
+
+        new_titlebar(self)
 
     def create_widgets(self):
         self.create_version_frame()
@@ -135,11 +142,6 @@ class GUI:
         self.content_frame = tk.Frame(self.root, bg=CONTENT_COLOR, bd=2, relief=RELIEF_BASIC)
         self.content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        # Creating status label
-        status_text, status_color = check_minecraft()
-        status_label = tk.Label(self.content_frame, text=status_text, fg=status_color, font=(FONT, 12, "bold"), bg=CONTENT_COLOR)
-        status_label.pack(expand=True, anchor="center")
-
     def option_content(self, option):
         self.reset_button_colors()
         self.reset_content_frame()
@@ -160,8 +162,32 @@ class GUI:
             button.config(bg=MENU_COLOR)  # reset background color of all buttons
 
     def reset_content_frame(self):
+        # good start but not perfect, only slider right now
         for widget in self.content_frame.winfo_children():
-            widget.forget()  # remove all widgets from the content frame
+            for child_widget in widget.winfo_children():
+                if isinstance(child_widget, tk.Label):
+                    module_name = child_widget['text']
+                    self.store_values(module_name, self.sliders, (int, float), tk.Scale)
+                    self.store_values(module_name, self.checkboxs, bool, tk.BooleanVar)
+                    self.store_values(module_name, self.buttons, str, tk.Button)
+                    
+            widget.destroy()
+
+    def store_values(self, module_name, objects, data_type, obj_type):
+        index = 0
+        while True:
+            obj_name = f"{module_name}_{index}"
+            if obj_name not in objects:
+                break
+
+            if isinstance(objects[obj_name], data_type):
+                objects[obj_name] # If already a value, do nothing
+            else: # Override object with value of object
+                if obj_type == tk.Scale or obj_type == tk.BooleanVar:
+                    objects[obj_name] = objects[obj_name].get()
+                elif obj_type == tk.Button:
+                    objects[obj_name] = objects[obj_name].cget("text")
+            index += 1
 
     def create_widgets_for_modules(self, modules):
         for module in modules:
@@ -175,9 +201,13 @@ class GUI:
         self.create_label(module_frame, module)
         self.create_slider(module_frame, module)
         self.create_check_box(module_frame, module)
+        self.create_dropdown(module_frame, module)
         self.create_button(module_frame, module)
         self.create_hotkey_button(module_frame, module)
         self.create_toggle_button(module_frame, module)
+
+        # Resize window, after short delay to ensure all widgets are created
+        self.root.after(50, self.resize_window)
 
     def create_title_label(self, parent, module):
         title_label = tk.Label(parent, text=self.modules.get(module)["name"], width=WIDTH, fg=FONT_COLOR, font=(FONT, FONT_SIZE_SUBTITLE, "bold"), bg=CONTENT_COLOR)
@@ -215,15 +245,14 @@ class GUI:
                 # Display hover information
                 CreateToolTip(slider, slider_tooltip, self.tooltips_enabled)
 
+                # Set slider value to saved value
                 if name in self.sliders and self.sliders[name] is not None:
-                    if isinstance(self.sliders[name], (int, float)):
-                        slider.set(self.sliders[name])
-                    else:
-                        slider.set(self.sliders[name].get())
+                    slider.set(self.sliders[name])
                 else:
                     slider.set(slider_default)
 
-                self.sliders[name] = slider # keep track of all sliders to access them later
+                # Save slider object to access and save value on option change
+                self.sliders[name] = slider
            
     def get_slider_value(self, module, x):
         return self.sliders[f"{module}_{x}"].get()
@@ -251,19 +280,25 @@ class GUI:
                 # Display hover information
                 CreateToolTip(checkbox, checkbox_tooltip, self.tooltips_enabled)
 
+                # Set checkbox value to saved value
                 if name in self.checkboxs and self.checkboxs[name] is not None:
-                    if isinstance(self.checkboxs[name], bool):
-                        checkbox_var.set(self.checkboxs[name])
-                    else:
-                        checkbox_var.set(self.checkboxs[name].get())
+                    checkbox_var.set(self.checkboxs[name])
                 else:
                     checkbox_var.set(False)
     
-                self.checkboxs[name] = checkbox_var # keep track of all checkbuttons to access them later
+                # Save checkbox object to access and save value on option change
+                self.checkboxs[name] = checkbox_var
 
     def get_checkbox_value(self, module, x):
         return self.checkboxs[f"{module}_{x}"].get()
     
+    def create_dropdown(self, parent, module):
+        module_name = self.modules.get(module)
+        if module_name.get("dropdown"):
+            for x in range(module_name.get("dropdown")):
+                pass
+                # TODO
+
     def create_button(self, parent, module):
         module_name = self.modules.get(module)
         if module_name.get("button"):
@@ -272,7 +307,13 @@ class GUI:
                 # Get button name
                 name = f"{module}_{x}"
 
-                # Get button values
+                # Get label values / if label exists
+                if module_name.get(f"button_label{x+1}"):
+                    button_label = module_name.get(f"button_label{x+1}")
+                    label = tk.Label(parent, text=button_label, fg=FONT_COLOR, font=(FONT, FONT_SIZE_CONTENT), bg=CONTENT_COLOR, wraplength=LENGTH, width=WIDTH)
+                    label.pack(fill=tk.BOTH, expand=True)
+
+                # Get button values / image or text
                 if(module_name.get(f"button_img{x+1}")):
                     image = self.load if module_name.get(f"button_img{x+1}") == "Load" else self.save
                     b_command = module_name.get(f"button_command{x+1}") 
@@ -283,23 +324,22 @@ class GUI:
                     button_text = module_name.get(f"button_text{x+1}")
                     button_command = module_name.get(f"button_command{x+1}")
                     button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=button_text, activebackground=PRESS_COLOR, command=lambda bt=button_text, name=name: button_command(self, module, name, bt))
-                    button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X, pady=2*CONTENT_PAD_Y)     
+                    button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X, pady=(0, CONTENT_PAD_Y))     
 
-                # Display hover information
+                # Display hover information / if tooltip exists
                 if module_name.get(f"button_tooltip{x+1}"):
                     button_tooltip = module_name.get(f"button_tooltip{x+1}")
                     CreateToolTip(button, button_tooltip, self.tooltips_enabled) 
 
+                # Set button value to saved value
                 if name in self.buttons and self.buttons[name] is not None:
-                    if isinstance(self.buttons[name], str):
-                        button.config(text=f"{self.buttons[name]}")
-                    else:
-                        button.config(text=self.buttons[name].cget("text"))
+                    button.config(text=f"{self.buttons[name]}")
 
+                # Save button object to access and save value on option change
                 self.buttons[name] = button 
 
     def create_hotkey_button(self, parent, module):
-        if self.modules.get(module).get("hotkey"):
+        if self.modules.get(module).get("hotkey", False):
             hotkey_text = f"Key: [{(self.modules.get(module).get('hotkey')).upper()}]" if self.modules.get(module).get("hotkey") and self.modules.get(module).get("hotkey") != "None" else "Bind Hotkey"
             button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=hotkey_text, activebackground=PRESS_COLOR, command=lambda: set_hotkey(self, button, module))
             button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
@@ -310,4 +350,20 @@ class GUI:
             toggle_button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: toggle_and_execute(self, module))
             toggle_button.pack(side=tk.BOTTOM, pady=(CONTENT_PAD_Y, 2*CONTENT_PAD_Y))
         
-            self.toggle_buttons[module] = toggle_button # keep track of all buttons to access them later
+            self.toggle_buttons[module] = toggle_button # Keep track of all buttons to access them later
+
+    def resize_window(self):
+        # Get old window size
+        old_width = self.root.winfo_width()
+        old_height = self.root.winfo_height()
+
+        # Get new requested window size
+        new_width = self.root.winfo_reqwidth()
+        new_height = self.root.winfo_reqheight()
+
+        # Check if new size is smaller than the old size
+        if old_width is None or old_height is None or new_width > old_width or new_height > old_height:
+            # Only increase the smaller dimension, keeping the larger one unchanged
+            new_width = max(new_width, old_width)
+            new_height = max(new_height, old_height)
+            self.root.geometry(f"{new_width}x{new_height}")

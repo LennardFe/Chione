@@ -21,7 +21,7 @@
         "hotkey": "None"
     },
     {
-        "name": "W-Tap",
+        "name": "SprintReset",
         "hotkey": "None",
         "slider_0": 0.55,
         "slider_1": 0.05,
@@ -47,17 +47,14 @@
     },
     {
         "name": "LoadConfig",
-        "hotkey": false,
         "button_0": null
     },
     {
         "name": "SaveConfig",
-        "hotkey": false,
         "button_0": null
     },
     {
         "name": "General",
-        "hotkey": false,
         "checkbox_0": false,
         "checkbox_1": false,
         "checkbox_2": false,
@@ -67,15 +64,14 @@
     },
     {
         "name": "Controls",
-        "hotkey": false,
         "button_0": null,
         "button_1": null,
         "button_2": null,
         "button_3": null,
-        "button_4": null
+        "button_4": null,
+        "button_5": null
     },
     {
-        "name": "About",
-        "hotkey": false
+        "name": "About"
     }
 ]

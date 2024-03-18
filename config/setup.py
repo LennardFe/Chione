@@ -4,12 +4,12 @@ CONTENT_COLOR = "#121212"
 FEATURE_COLOR = "#8A2BE2"
 ERROR_COLOR = "#FF0000"
 GOOD_COLOR = "#017301"
-FONT_COLOR = "#ffffff"
+FONT_COLOR = "#cccccc"
 PRESS_COLOR = "#333333"
 
 # Window Size
-MIN_SIZE_W = "900"
-MIN_SIZE_H = "600"
+MIN_SIZE_W = 750
+MIN_SIZE_H = 500
 WINDOW_SIZE = f"{MIN_SIZE_W}x{MIN_SIZE_H}"
 
 # Text & Font
@@ -29,6 +29,7 @@ CONTENT_PAD_X = 10
 RELIEF_BASIC = "flat"
 RELIEF_FANCY = "ridge"
 RELIEF_FRAME = "sunken"
+DEFAULT_PAGE = "⚔️ AutoClicker"
 
 # Tooltip
 WAIT_TIME = 25
