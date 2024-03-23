@@ -59,7 +59,7 @@ def get_controls(self, action_key, default):
         return key_text
     
 def check_special_chars(key):
-    # goofy solution, the problem is tkinter and pyautogui use different names for the same key
+    # Goofy solution, the problem is tkinter and pyautogui use different names for the same key
     if key == "Control": return "ctrl"
     elif key == "Caps": return "capslock"
     else: return key 

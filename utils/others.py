@@ -12,7 +12,7 @@ def resource(relative_path):
 
 def get_file_path(filename):
     # Get the directory of the executable or the script
-    if getattr(sys, 'frozen', False):  # if the application is frozen (compiled)
+    if getattr(sys, 'frozen', False):  # If the application is frozen (compiled)
         # If frozen, use sys._MEIPASS to get the base directory
         base_dir = sys._MEIPASS
         file_path = os.path.join(base_dir, filename)
@@ -25,7 +25,7 @@ def get_file_path(filename):
     return file_path
 
 def set_settings(self):
-    # TODO: fix this, thats some shit code
+    # TODO: Goofy code, needs to be reworked
     general_checkboxes = {key: value for key, value in self.checkboxs.items() if key.startswith('General')}
     for key, value in general_checkboxes.items():
         module = key.split('_')[0]

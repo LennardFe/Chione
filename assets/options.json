@@ -6,7 +6,8 @@
         "slider_1": 2,
         "slider_2": 2,
         "slider_3": 25,
-        "checkbox_0": false
+        "checkbox_0": false,
+        "dropdown_0": null
     },
     {
         "name": "RightClicker",
@@ -14,7 +15,7 @@
         "slider_0": 20,
         "slider_1": 2,
         "slider_2": 2,
-        "checkbox_0": true
+        "checkbox_0": false
     },
     {
         "name": "AutoSprint",
@@ -25,7 +26,8 @@
         "hotkey": "None",
         "slider_0": 0.55,
         "slider_1": 0.05,
-        "slider_2": 0.03
+        "slider_2": 0.03,
+        "dropdown_0": null
     },
     {
         "name": "Strafing",
@@ -46,11 +48,13 @@
     },
     {
         "name": "LoadConfig",
-        "hotkey": false
+        "hotkey": false,
+        "button_0": null
     },
     {
         "name": "SaveConfig",
-        "hotkey": false
+        "hotkey": false,
+        "button_0": null
     },
     {
         "name": "General",

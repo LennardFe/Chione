@@ -7,7 +7,7 @@ def toggle_and_execute(self, module):
     global last_key_press_time
     current_time = time.time()
 
-    if current_time - last_key_press_time >= spam_delay: # prevent spamming
+    if current_time - last_key_press_time >= spam_delay: # Prevent spamming of hotkeys
         last_key_press_time = current_time
         try:
             new_state = not self.module_states.get(module, False)
@@ -29,7 +29,7 @@ def toggle_and_execute(self, module):
             print(f"Exception: {e} with module {module}") # If options page has not been opened yet, module cant be loaded
 
 def retoggle(self, module):
-    # TODO not the nicest solution
+    # TODO Rework, not the nicest solution
     if self.module_states.get(module):
         button = self.toggle_buttons[module]
         self.module_states[module] = False
@@ -40,17 +40,17 @@ def retoggle(self, module):
 def get_params(self, funs, module):
     params = []
     number = 0
-    prev_fun = None  # variable to store the previous function name
+    prev_fun = None  # Variable to store the previous function name
     for fun_name in funs:
-        # check if the function exists as a method of this class
+        # Check if the function exists as a method of this class
         if hasattr(self, fun_name) and callable(getattr(self, fun_name)):
-            # get the function object using its name
+            # Get the function object using its name
             fun = getattr(self, fun_name)
-            # check if this is the first iteration or if the current function is different from the previous one
+            # Check if this is the first iteration or if the current function is different from the previous one
             if prev_fun is None or fun_name != prev_fun:
-                number = 0  # reset index amount to 0
+                number = 0  # Reset index amount to 0
             prev_fun = fun_name  # update the previous function name
-            # call the function with the module parameter
+            # Call the function with the module parameter
             result = fun(module, number)
             params.append(result)
             number = number + 1
