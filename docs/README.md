@@ -3,7 +3,6 @@
 <h1 align="center">🔮 Chione</h1>
 <p align="center">Python-based autoclicker and macro tool designed primarily for the videogame Minecraft.</p>
 <p align="center"><a href="https://github.com/vs-marshall/Chione#installation">Download & Installation</a></p>
----
 
 <h2 align="center">Features</h2>
 
