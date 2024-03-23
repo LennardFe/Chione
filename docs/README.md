@@ -2,8 +2,7 @@
 
 <h1 align="center">🔮 Chione</h1>
 <p align="center">Python-based autoclicker and macro tool designed primarily for the videogame Minecraft.</p>
-
----
+<p align="center"><a href="https://github.com/vs-marshall/Chione#installation">Download & Installation</a></p>
 
 <h2 align="center">Features</h2>
 
@@ -14,8 +13,8 @@
 
 <h2 align="center">Screenshots</h2>
 
-![image](https://github.com/vs-marshall/Chione/assets/78146861/e17c76ff-38bc-4eae-b215-fdbb2caf0b5f)
-![image](https://github.com/vs-marshall/Chione/assets/78146861/341490c8-f573-4227-86d7-d6017dfd7760)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/a7cc50d4-2161-4d47-ab4c-6df70db45a06)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/541152b9-e768-4e3a-ab6d-27d56b04743d)
 
 <h2 align="center">Installation</h2>
 
