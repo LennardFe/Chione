@@ -1,21 +1,23 @@
 # Internal Imports - Utils
-from utils.listener import window_listener, set_settings
 from utils.hotkeys import set_hotkey, on_key_press
+from utils.listeners import window_listener
 from utils.options import load_settings
 from utils.options import save_settings
 from utils.executor import toggle_and_execute
 from utils.executor import retoggle
 from utils.others import get_file_path
+from utils.others import set_settings
 from utils.others import open_web
 from utils.others import resource
 
 # Internal Imports - Configs
 from config.categories import ModuleCategory
-from gui.gui_checkbox import CustomCheckbox
-from gui.gui_tooltip import CreateToolTip
-from gui.gui_titlebar import new_titlebar
 from config.modules import modules
 from config.setup import *
+
+# Internal Imports - GUI
+from gui.gui_dropdown import Dropdown
+from gui.gui_tooltip import ToolTip
 
 # Third-party Library Imports
 from pynput import keyboard
@@ -25,16 +27,16 @@ import tkinter as tk
 import threading
 
 class GUI: 
-    def __init__(self, version, title, dev, web):
+    def __init__(self, version, title, dev):
         # Initialize attributes
         self.version = version
         self.title = title
         self.dev = dev
-        self.web = web
         self.modules = modules
         self.buttons = {}
         self.sliders = {}
         self.checkboxs = {}
+        self.dropdowns = {}
         self.toggle_buttons = {}
         self.hotkeys_enabled = True
         self.tooltips_enabled = True
@@ -83,8 +85,6 @@ class GUI:
         # Set default page on startup
         self.option_content(DEFAULT_PAGE)
 
-        new_titlebar(self)
-
     def create_widgets(self):
         self.create_version_frame()
         self.create_menu_frame()
@@ -92,29 +92,55 @@ class GUI:
         self.create_content_frame()
 
     def create_version_frame(self):
-        version_frame = tk.Frame(self.root, bg=CONTENT_COLOR)
-        version_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        # Create version frame
+        version_frame = tk.Frame(self.root, 
+                                 bg=CONTENT_COLOR)
+        version_frame.pack(side=tk.BOTTOM, 
+                           fill=tk.X)
 
-        # Creatin dividing line
-        line_canvas = tk.Canvas(version_frame, height=1, bg=FEATURE_COLOR, highlightthickness=0)
+        # Create dividing line
+        line_canvas = tk.Canvas(version_frame, 
+                                height=1, 
+                                bg=FEATURE_COLOR, 
+                                highlightthickness=0)
         line_canvas.pack(fill=tk.X)
 
-        # Creating version label
-        version_label = tk.Label(version_frame, text=f"version {self.version}", fg=FONT_COLOR, font=(FONT, 8), bg=CONTENT_COLOR)
-        version_label.pack(side="left", anchor="sw", padx=5, pady=5)
+        # Create version label
+        version_label = tk.Label(version_frame, 
+                                 text=f"version {self.version}", 
+                                 fg=FONT_COLOR, 
+                                 font=(FONT, FONT_SIZE_CONTENT), 
+                                 bg=CONTENT_COLOR)
+        version_label.pack(side=tk.LEFT, 
+                           anchor=tk.SW, 
+                           padx=CONTENT_PAD_X/2, 
+                           pady=CONTENT_PAD_Y/2)
 
-        # Creating dev label
-        dev_label = tk.Label(version_frame, text=f"{self.dev}", fg=FONT_COLOR, font=(FONT, 8), bg=CONTENT_COLOR)
-        dev_label.pack(side="right", anchor="se", padx=5, pady=5)
-        dev_label.bind("<Button-1>", lambda e: open_web(self.web))
+        # Create dev label
+        dev_label = tk.Label(version_frame, 
+                             text=self.dev, 
+                             fg=FONT_COLOR, 
+                             font=(FONT, 8), 
+                             bg=CONTENT_COLOR)
+        dev_label.pack(side=tk.RIGHT, 
+                       anchor=tk.SE, 
+                       padx=CONTENT_PAD_X/2, 
+                       pady=CONTENT_PAD_Y/2)
 
     def create_menu_frame(self):
-        menu_frame = tk.Frame(self.root, bg=MENU_COLOR)
-        menu_frame.pack(side=tk.LEFT, fill=tk.Y)
+        # Creating menu frame
+        menu_frame = tk.Frame(self.root, 
+                              bg=MENU_COLOR)
+        menu_frame.pack(side=tk.LEFT, 
+                        fill=tk.Y)
 
         # Creating client name label
-        client_name_label = tk.Label(menu_frame, text=self.title, fg=FEATURE_COLOR, font=(FONT, FONT_SIZE_BIG_TITLE, "bold"), bg=MENU_COLOR)
-        client_name_label.pack(pady=(3, 0), padx=5, anchor=tk.CENTER)
+        client_name_label = tk.Label(menu_frame, 
+                                     text=self.title, 
+                                     fg=FEATURE_COLOR, 
+                                     font=(FONT, FONT_SIZE_BIG_TITLE, "bold"), 
+                                     bg=MENU_COLOR)
+        client_name_label.pack(anchor=tk.CENTER)
 
         # Creating option buttons
         self.option_buttons = []
@@ -122,8 +148,18 @@ class GUI:
             button = self.create_option_button(menu_frame, option)
             self.option_buttons.append(button)
 
-    def create_option_button(self, parent, option): # TODO: Anchor W?
-        button = tk.Button(parent, bg=MENU_COLOR, fg=FONT_COLOR, font=(FONT, FONT_SIZE_OPTIONS), relief=RELIEF_BASIC, text=option, activebackground=PRESS_COLOR, command=lambda opt=option: self.option_content(opt)) 
+    def create_option_button(self, parent, option):
+        # Creating option button
+        button = tk.Button(parent,
+                            bg=MENU_COLOR, 
+                            fg=FONT_COLOR, 
+                            font=(FONT, FONT_SIZE_OPTIONS), 
+                            relief=RELIEF_BASIC, 
+                            text=option, 
+                            activebackground=PRESS_COLOR, 
+                            command=lambda opt=option: self.option_content(opt)) 
+        
+        # Adjusting button placement based on option
         if option == "⚙️ Settings" or option ==  "🔧 Configs":
             button.pack(fill=tk.X, pady=0, ipady=10, side=tk.BOTTOM)
         else:
@@ -131,50 +167,69 @@ class GUI:
         return button
 
     def create_content_title_frame(self):
-        content_title_frame = tk.Frame(self.root, bg=CONTENT_COLOR)
-        content_title_frame.pack(side=tk.TOP, fill=tk.X)
+        # Creating content title frame
+        content_title_frame = tk.Frame(self.root, 
+                                       bg=CONTENT_COLOR)
+        content_title_frame.pack(side=tk.TOP, 
+                                 fill=tk.X)
 
         # Creating title label
-        self.content_title_label = tk.Label(content_title_frame, fg=FONT_COLOR, font=(FONT, FONT_SIZE_TITLE), bg=CONTENT_COLOR)
-        self.content_title_label.pack(expand=True, anchor=tk.CENTER, pady=(11, 0))
+        self.content_title_label = tk.Label(content_title_frame, 
+                                            fg=FONT_COLOR, 
+                                            font=(FONT, FONT_SIZE_TITLE), 
+                                            bg=CONTENT_COLOR)
+        self.content_title_label.pack(expand=True, 
+                                      anchor=tk.CENTER, 
+                                      pady=(9, 0))
 
     def create_content_frame(self):
-        self.content_frame = tk.Frame(self.root, bg=CONTENT_COLOR, bd=2, relief=RELIEF_BASIC)
-        self.content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        # Creating content frame
+        self.content_frame = tk.Frame(self.root, 
+                                      bg=CONTENT_COLOR, 
+                                      bd=2, 
+                                      relief=RELIEF_BASIC)
+        self.content_frame.pack(side=tk.RIGHT, 
+                                fill=tk.BOTH, 
+                                expand=True)
 
     def option_content(self, option):
+        # Reset button colors and content frame
         self.reset_button_colors()
         self.reset_content_frame()
 
+        # Change button color and content title
         for button in self.option_buttons:
             if button.cget("text") == option:
                 button.config(bg=PRESS_COLOR) # change button pressed color
                 self.content_title_label.config(text=option) # change content title
 
-        # filter modules based on the selected option's category
+        # Filter modules based on the selected option's category
         modules_for_option = {name: module_info for name, module_info in self.modules.items() if module_info.get("category") == option}
 
-        # create widgets for filtered modules
+        # Create widgets for filtered modules
         self.create_widgets_for_modules(modules_for_option)
             
     def reset_button_colors(self):
         for button in self.option_buttons:
-            button.config(bg=MENU_COLOR)  # reset background color of all buttons
+            button.config(bg=MENU_COLOR)
 
     def reset_content_frame(self):
-        # good start but not perfect, only slider right now
+        # Reset content frame and save values
         for widget in self.content_frame.winfo_children():
             for child_widget in widget.winfo_children():
                 if isinstance(child_widget, tk.Label):
                     module_name = child_widget['text']
                     self.store_values(module_name, self.sliders, (int, float), tk.Scale)
                     self.store_values(module_name, self.checkboxs, bool, tk.BooleanVar)
+                    self.store_values(module_name, self.dropdowns, str, Dropdown)
                     self.store_values(module_name, self.buttons, str, tk.Button)
                     
             widget.destroy()
 
     def store_values(self, module_name, objects, data_type, obj_type):
         index = 0
+
+        # Store values of objects
         while True:
             obj_name = f"{module_name}_{index}"
             if obj_name not in objects:
@@ -187,16 +242,25 @@ class GUI:
                     objects[obj_name] = objects[obj_name].get()
                 elif obj_type == tk.Button:
                     objects[obj_name] = objects[obj_name].cget("text")
+                elif obj_type == Dropdown:
+                    objects[obj_name] = objects[obj_name].selected_option.get()
             index += 1
 
     def create_widgets_for_modules(self, modules):
+        # Create widgets for each module
         for module in modules:
             self.create_child_widgets(module)
 
     def create_child_widgets(self, module):
+        # Create module frame
         module_frame = tk.Frame(self.content_frame, bg=CONTENT_COLOR, borderwidth=8, relief=RELIEF_FRAME)
         module_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, anchor=tk.CENTER, pady=(4, 0))
 
+        # Create overlay frame, to prevent flickering
+        overlay_frame = tk.Frame(self.content_frame, bg=CONTENT_COLOR)
+        overlay_frame.place(relwidth=1, relheight=1)
+
+        # Create widgets for module
         self.create_title_label(module_frame, module)
         self.create_label(module_frame, module)
         self.create_slider(module_frame, module)
@@ -208,18 +272,40 @@ class GUI:
 
         # Resize window, after short delay to ensure all widgets are created
         self.root.after(50, self.resize_window)
+        
+        # Remove the overlay frame after short delay
+        self.root.after(50, overlay_frame.destroy)
 
     def create_title_label(self, parent, module):
-        title_label = tk.Label(parent, text=self.modules.get(module)["name"], width=WIDTH, fg=FONT_COLOR, font=(FONT, FONT_SIZE_SUBTITLE, "bold"), bg=CONTENT_COLOR)
-        title_label.pack(side=tk.TOP, pady=(CONTENT_PAD_Y, 0), padx=2*CONTENT_PAD_X) # adjust x padding here so the modules are all the same width
+        title = self.modules.get(module)["name"]
+
+        # Create title label
+        title_label = tk.Label(parent, 
+                               text=title, 
+                               width=WIDTH, fg=FONT_COLOR, 
+                               font=(FONT, FONT_SIZE_SUBTITLE, "bold"), 
+                               bg=CONTENT_COLOR)
+        title_label.pack(side=tk.TOP, 
+                         padx=2*CONTENT_PAD_X,
+                         pady=(CONTENT_PAD_Y, 0))
 
     def create_label(self, parent, module):
         module_name = self.modules.get(module)
         if module_name.get("label"):
             for x in range(module_name.get("label")):
                 label_text = module_name.get(f"label_text{x+1}")
-                label = tk.Label(parent, text=label_text, fg=FONT_COLOR, font=(FONT, FONT_SIZE_CONTENT), bg=CONTENT_COLOR, wraplength=LENGTH, width=WIDTH)
-                label.pack(fill=tk.BOTH, expand=True, pady=CONTENT_PAD_Y)
+
+                label = tk.Label(parent, 
+                                 text=label_text, 
+                                 fg=FONT_COLOR, 
+                                 font=(FONT, FONT_SIZE_CONTENT), 
+                                 bg=CONTENT_COLOR, 
+                                 wraplength=LENGTH, 
+                                 width=WIDTH)
+                label.pack(fill=tk.BOTH, 
+                           expand=True, 
+                           pady=CONTENT_PAD_Y)
+
                 if(module_name.get(f"label_link{x+1}")):
                     label.bind("<Button-1>", lambda e, link=f"label_link{x+1}": open_web(module_name.get(link)))
                     
@@ -238,12 +324,29 @@ class GUI:
                 slider_tooltip = module_name.get(f"slider_tooltip{x+1}")
 
                 # Create slider
-                slider = tk.Scale(parent, bg=CONTENT_COLOR, fg=FONT_COLOR, relief=RELIEF_BASIC, highlightthickness=0, font=(FONT, FONT_SIZE_CONTENT), label=slider_text, from_=slider_min, to=slider_max, orient=tk.HORIZONTAL, resolution=slider_step)
-                slider.bind("<ButtonRelease-1>", (lambda _: retoggle(self, module)))
-                slider.pack(side=tk.TOP, fill=tk.X, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X)
+                slider = tk.Scale(parent, 
+                                  bg=CONTENT_COLOR, 
+                                  fg=FONT_COLOR, 
+                                  relief=RELIEF_BASIC, 
+                                  highlightthickness=0, 
+                                  font=(FONT, FONT_SIZE_CONTENT), 
+                                  label=slider_text, 
+                                  from_=slider_min, 
+                                  to=slider_max, 
+                                  orient=tk.HORIZONTAL, 
+                                  resolution=slider_step)
+                
+                slider.bind("<ButtonRelease-1>", (lambda _: retoggle(self, module))) # TODO: Can we move this below the pack? 
 
-                # Display hover information
-                CreateToolTip(slider, slider_tooltip, self.tooltips_enabled)
+                slider.pack(side=tk.TOP, 
+                            fill=tk.X, 
+                            expand=True, 
+                            anchor=tk.CENTER,
+                            padx=2*CONTENT_PAD_X,
+                            pady=CONTENT_PAD_Y/2)
+
+                # Display tooltip information
+                ToolTip(slider, slider_tooltip, self.tooltips_enabled)
 
                 # Set slider value to saved value
                 if name in self.sliders and self.sliders[name] is not None:
@@ -255,7 +358,11 @@ class GUI:
                 self.sliders[name] = slider
            
     def get_slider_value(self, module, x):
-        return self.sliders[f"{module}_{x}"].get()
+        name = f"{module}_{x}"
+        if isinstance(self.sliders[name], tk.Scale):
+            return self.sliders[name].get()
+        else:
+            return self.sliders[name]
 
     def create_check_box(self, parent, module):
         module_name = self.modules.get(module)
@@ -271,14 +378,40 @@ class GUI:
                 # Create checkbox
                 if module_name.get(f"checkbox_command{x+1}"):
                     cb_command = module_name.get(f"checkbox_command{x+1}")
-                    checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, activebackground=PRESS_COLOR, highlightthickness=0, command=lambda cb=cb_command, var=checkbox_var: cb(self, module, var.get()))
+                    checkbox = tk.Checkbutton(parent, 
+                                              text=checkbox_text, 
+                                              font=(FONT, FONT_SIZE_CONTENT), 
+                                              variable=checkbox_var, 
+                                              bg=CONTENT_COLOR, 
+                                              fg=FONT_COLOR, 
+                                              selectcolor=CONTENT_COLOR, 
+                                              relief=RELIEF_BASIC, 
+                                              activebackground=PRESS_COLOR, 
+                                              highlightthickness=0, 
+                                              command=lambda cb=cb_command, 
+                                              var=checkbox_var: cb(self, module, var.get()))
+                    
                 else:
-                    checkbox = tk.Checkbutton(parent, text=checkbox_text, font=(FONT, FONT_SIZE_CONTENT), variable=checkbox_var, bg=CONTENT_COLOR, fg=FONT_COLOR, selectcolor=CONTENT_COLOR, relief=RELIEF_BASIC, activebackground=PRESS_COLOR, highlightthickness=0, command=lambda: retoggle(self, module))            
+                    checkbox = tk.Checkbutton(parent, 
+                                              text=checkbox_text, 
+                                              font=(FONT, FONT_SIZE_CONTENT), 
+                                              variable=checkbox_var, 
+                                              bg=CONTENT_COLOR, 
+                                              fg=FONT_COLOR, 
+                                              selectcolor=CONTENT_COLOR, 
+                                              relief=RELIEF_BASIC, 
+                                              activebackground=PRESS_COLOR, 
+                                              highlightthickness=0, 
+                                              command=lambda: retoggle(self, module))            
                 
-                checkbox.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
+                checkbox.pack(side=tk.TOP, 
+                              fill=tk.BOTH,         
+                              expand=True,
+                              padx=2*CONTENT_PAD_X,
+                              pady=CONTENT_PAD_Y)
 
                 # Display hover information
-                CreateToolTip(checkbox, checkbox_tooltip, self.tooltips_enabled)
+                ToolTip(checkbox, checkbox_tooltip, self.tooltips_enabled)
 
                 # Set checkbox value to saved value
                 if name in self.checkboxs and self.checkboxs[name] is not None:
@@ -290,14 +423,44 @@ class GUI:
                 self.checkboxs[name] = checkbox_var
 
     def get_checkbox_value(self, module, x):
-        return self.checkboxs[f"{module}_{x}"].get()
+        name = f"{module}_{x}"
+        if isinstance(self.checkboxs[name], tk.BooleanVar):
+            return self.checkboxs[name].get()
+        else:
+            return self.checkboxs[name]
     
     def create_dropdown(self, parent, module):
         module_name = self.modules.get(module)
         if module_name.get("dropdown"):
             for x in range(module_name.get("dropdown")):
-                pass
-                # TODO
+                name = f"{module}_{x}"
+                label = module_name.get(f"dropdown_label{x+1}")
+                values = module_name.get(f"dropdown_values{x+1}")
+                tooltip = module_name.get(f"dropdown_tooltip{x+1}")
+
+                dropdown = Dropdown(parent, 
+                                    label, 
+                                    values,
+                                    command=lambda: retoggle(self, module))
+                
+                dropdown.pack(side=tk.TOP, 
+                              fill=tk.BOTH, 
+                              expand=True, 
+                              padx=2*CONTENT_PAD_X,
+                              pady=CONTENT_PAD_Y)
+
+                ToolTip(dropdown, tooltip, self.tooltips_enabled)
+
+                # Set dropdown value to saved value
+                if name in self.dropdowns and self.dropdowns[name] is not None and self.dropdowns[name] in values:
+                    dropdown.selected_option.set(self.dropdowns[name])
+                    dropdown.dropdown_button.config(text=f"{self.dropdowns[name]} ↓") # Move this to Dropdown class?
+                
+                # Save dropdown object to access and save value on option change
+                self.dropdowns[name] = dropdown
+
+    def get_dropdown_value(self, module, x):
+        return self.dropdowns[f"{module}_{x}"].selected_option.get()
 
     def create_button(self, parent, module):
         module_name = self.modules.get(module)
@@ -310,26 +473,55 @@ class GUI:
                 # Get label values / if label exists
                 if module_name.get(f"button_label{x+1}"):
                     button_label = module_name.get(f"button_label{x+1}")
-                    label = tk.Label(parent, text=button_label, fg=FONT_COLOR, font=(FONT, FONT_SIZE_CONTENT), bg=CONTENT_COLOR, wraplength=LENGTH, width=WIDTH)
-                    label.pack(fill=tk.BOTH, expand=True)
+                    label = tk.Label(parent, 
+                                     text=button_label, 
+                                     fg=FONT_COLOR, 
+                                     font=(FONT, FONT_SIZE_CONTENT), 
+                                     bg=CONTENT_COLOR, 
+                                     wraplength=LENGTH, 
+                                     width=WIDTH)
+                    
+                    label.pack(fill=tk.BOTH, 
+                               expand=True)
 
-                # Get button values / image or text
+                # Get button values / image or text, kinda hardcoded for load and save config
                 if(module_name.get(f"button_img{x+1}")):
                     image = self.load if module_name.get(f"button_img{x+1}") == "Load" else self.save
                     b_command = module_name.get(f"button_command{x+1}") 
-                    button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: b_command(self, module))
-                    button.pack(side=tk.BOTTOM, pady=2*CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
+                    button = tk.Button(parent, 
+                                       image=image, 
+                                       bg=CONTENT_COLOR, 
+                                       relief=RELIEF_BASIC, 
+                                       activebackground=CONTENT_COLOR, 
+                                       bd=0, 
+                                       command=lambda: b_command(self, module))
+                    
+                    button.pack(side=tk.BOTTOM, 
+                                padx=2*CONTENT_PAD_X,
+                                pady=2*CONTENT_PAD_Y)
 
-                else:
+                else: # Currently only used in controls and reset button
                     button_text = module_name.get(f"button_text{x+1}")
                     button_command = module_name.get(f"button_command{x+1}")
-                    button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=button_text, activebackground=PRESS_COLOR, command=lambda bt=button_text, name=name: button_command(self, module, name, bt))
-                    button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, padx=2*CONTENT_PAD_X, pady=(0, CONTENT_PAD_Y))     
+                    button = tk.Button(parent, 
+                                       bg=CONTENT_COLOR, 
+                                       font=(FONT, FONT_SIZE_CONTENT), 
+                                       fg=FONT_COLOR, 
+                                       relief=RELIEF_FANCY, 
+                                       text=button_text, 
+                                       activebackground=PRESS_COLOR, 
+                                       command=lambda bt=button_text, name=name: button_command(self, module, name, bt))
+                    
+                    button.pack(side=tk.TOP, 
+                                fill=tk.BOTH, 
+                                expand=True, 
+                                padx=2*CONTENT_PAD_X,
+                                pady=(0,CONTENT_PAD_Y)) # 0 here -> mainly so the controls are close to the corresponding label
 
                 # Display hover information / if tooltip exists
                 if module_name.get(f"button_tooltip{x+1}"):
                     button_tooltip = module_name.get(f"button_tooltip{x+1}")
-                    CreateToolTip(button, button_tooltip, self.tooltips_enabled) 
+                    ToolTip(button, button_tooltip, self.tooltips_enabled) 
 
                 # Set button value to saved value
                 if name in self.buttons and self.buttons[name] is not None:
@@ -341,14 +533,36 @@ class GUI:
     def create_hotkey_button(self, parent, module):
         if self.modules.get(module).get("hotkey", False):
             hotkey_text = f"Key: [{(self.modules.get(module).get('hotkey')).upper()}]" if self.modules.get(module).get("hotkey") and self.modules.get(module).get("hotkey") != "None" else "Bind Hotkey"
-            button = tk.Button(parent, bg=CONTENT_COLOR, font=(FONT, FONT_SIZE_CONTENT), fg=FONT_COLOR, relief=RELIEF_FANCY, text=hotkey_text, activebackground=PRESS_COLOR, command=lambda: set_hotkey(self, button, module))
-            button.pack(fill=tk.BOTH, side=tk.TOP, expand=True, anchor=tk.CENTER, pady=CONTENT_PAD_Y, padx=2*CONTENT_PAD_X)
+            
+            button = tk.Button(parent, 
+                               bg=CONTENT_COLOR, 
+                               font=(FONT, FONT_SIZE_CONTENT), 
+                               fg=FONT_COLOR, 
+                               relief=RELIEF_FANCY, 
+                               text=hotkey_text, 
+                               activebackground=PRESS_COLOR, 
+                               command=lambda: set_hotkey(self, button, module))
+            
+            button.pack(side=tk.TOP,
+                        fill=tk.BOTH, 
+                        expand=True, 
+                        padx=2*CONTENT_PAD_X,
+                        pady=CONTENT_PAD_Y)
 
     def create_toggle_button(self, parent, module):
         if self.modules.get(module).get("toggle"):
             image = self.on if self.module_states.get(module) else self.off
-            toggle_button = tk.Button(parent, image=image, bg=CONTENT_COLOR, relief=RELIEF_BASIC, bd=0, activebackground=CONTENT_COLOR, command=lambda: toggle_and_execute(self, module))
-            toggle_button.pack(side=tk.BOTTOM, pady=(CONTENT_PAD_Y, 2*CONTENT_PAD_Y))
+
+            toggle_button = tk.Button(parent, 
+                                      image=image, 
+                                      bg=CONTENT_COLOR, 
+                                      relief=RELIEF_BASIC, 
+                                      activebackground=CONTENT_COLOR, 
+                                      bd=0, 
+                                      command=lambda: toggle_and_execute(self, module))
+            
+            toggle_button.pack(side=tk.BOTTOM, 
+                               pady=(CONTENT_PAD_Y, 2*CONTENT_PAD_Y)) # 2x PADY Bottom, so the button is closer to the content than the end of the frame
         
             self.toggle_buttons[module] = toggle_button # Keep track of all buttons to access them later
 
@@ -358,8 +572,8 @@ class GUI:
         old_height = self.root.winfo_height()
 
         # Get new requested window size
-        new_width = self.root.winfo_reqwidth()
-        new_height = self.root.winfo_reqheight()
+        new_width = self.root.winfo_reqwidth() + 10  # Add puffer of 10 units
+        new_height = self.root.winfo_reqheight() + 10  # Add puffer of 10 units
 
         # Check if new size is smaller than the old size
         if old_width is None or old_height is None or new_width > old_width or new_height > old_height:

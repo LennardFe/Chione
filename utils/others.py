@@ -23,3 +23,16 @@ def get_file_path(filename):
         file_path = os.path.join(parent_dir, "assets", filename)
     
     return file_path
+
+def set_settings(self):
+    # TODO: fix this, thats some shit code
+    general_checkboxes = {key: value for key, value in self.checkboxs.items() if key.startswith('General')}
+    for key, value in general_checkboxes.items():
+        module = key.split('_')[0]
+        number = int(key.split('_')[-1]) # careful
+        module_name = self.modules.get(module)
+        cb_command = module_name.get(f"checkbox_command{number+1}")
+        if isinstance(value, bool):
+            cb_command(self, module, value)
+        else:
+            cb_command(self, module, value.get())

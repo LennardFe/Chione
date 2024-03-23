@@ -1,9 +1,30 @@
-from modules.autoclicker import thread_lclick, thread_rclick
-from modules.movement import thread_autosprint, thread_wtap, thread_strafing
-from modules.misc import thread_antiafk, selfdestruct
-from modules.configs import save_config, load_config
-from modules.settings import thread_window, thread_menu, hide_taskbar, dis_tooltips, on_top, reset_settings, set_controls
 from config.categories import ModuleCategory as MC
+from modules.autoclicker import (
+    thread_lclick, 
+    thread_rclick
+    )
+from modules.movement import (
+    thread_autosprint,
+    thread_sprintreset,
+    thread_strafing
+)
+from modules.misc import (
+    thread_antiafk,
+    selfdestruct
+)
+from modules.configs import (
+    save_config,
+    load_config
+)
+from modules.settings import (
+    thread_window,
+    thread_menu,
+    hide_taskbar,
+    dis_tooltips,
+    on_top,
+    reset_settings,
+    set_controls
+)
 
 modules = {
     "LeftClicker": {
@@ -23,7 +44,7 @@ modules = {
         "slider_text2": "Randomize:",
         "slider_step2": 1,
         "slider_default2": 2,
-        "slider_tooltip2": "Randomize the Clicks.",
+        "slider_tooltip2": "Randomize the clicks.",
         "slider_min3": 0,
         "slider_max3": 10,
         "slider_text3": "Shake:",
@@ -36,6 +57,10 @@ modules = {
         "slider_step4": 1,
         "slider_default4": 10,
         "slider_tooltip4": "Chance to blockhit.",
+        "dropdown": 1,
+        "dropdown_label1": "Pattern",
+        "dropdown_tooltip1": "Specify the click pattern to use.",
+        "dropdown_values1": ["Basic", "Butterfly", "Jitter"],
         "checkbox": 1,
         "checkbox_text1": "Hold Leftclick",
         "checkbox_tooltip1": "Click while holding leftclick.",
@@ -59,7 +84,7 @@ modules = {
         "slider_text2": "Randomize:",
         "slider_step2": 1,
         "slider_default2": 2,
-        "slider_tooltip2": "Randomize the Clicks.",
+        "slider_tooltip2": "Randomize the clicks.",
         "slider_min3": 0,
         "slider_max3": 10,
         "slider_text3": "Shake:",
@@ -105,10 +130,11 @@ modules = {
         "slider_default3": 0.15,
         "slider_tooltip3": "The time the Key will be held.",
         "dropdown": 1,
-        "dropdown_label1": "Mode:",
+        "dropdown_label1": "Mode",
+        "dropdown_tooltip1": "The mode of the Sprint Reset.",
         "dropdown_values1": ["W-Tap", "S-Tap", "Crouch"],
-        "params": ["get_slider_value", "get_slider_value", "get_slider_value"], 
-        "command": thread_wtap
+        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_dropdown_value"], 
+        "command": thread_sprintreset
     },
     "Strafing": {
         "name": "Strafing",
@@ -161,10 +187,7 @@ modules = {
         "category": MC.MISC,
         "hotkey": "None",
         "toggle": True,
-        "checkbox": 1,
-        "checkbox_text1": "Delete everything",
-        "checkbox_tooltip1": "Check this to also delete all config files and Chione itself.",
-        "params": ["get_checkbox_value"],
+        "params": [],
         "command": selfdestruct
     },
     "LoadConfig": {
@@ -211,7 +234,7 @@ modules = {
         "checkbox_command5": on_top,
         "button": 1,
         "button_text1": "Reset Chione",
-        "button_tooltip1": "Reset & closes Chione. May help with some bugs.",
+        "button_tooltip1": "Reset and closes Chione. Helps with fixing bugs.",
         "button_command1": reset_settings
     },
     "Controls": {
@@ -219,7 +242,7 @@ modules = {
         "category": MC.SETTINGS,
         "toggle": False,
         "label": 1,
-        "label_text1": "Change to your keys in Minecraft, so Chione will work correctly.",
+        "label_text1": "Change to your keys in Minecraft, so Chione will work.",
         "button": 6,
         "button_text1": "[SHIFT]",
         "button_label1": "Sprint-Key:",
@@ -240,16 +263,15 @@ modules = {
         "button_label6": "Right-Key:",
         "button_command6": set_controls
     },
-    "About": {
-        "name": "About",
+    "Others": {
+        "name": "Others",
         "category": MC.SETTINGS,
         "toggle": False,
-        "label": 4,
-        "label_text1": "Chione is a python-based, free and open-source autoclicker and macro assistant. Be aware that using this software may be prohibited by some servers. Use at your own risk.",
-        "label_text2": "If you find any bugs or have suggestions, please report them on the GitHub page or Discord server.",
-        "label_text3": "Discord:\n'marshall.com'",
-        "label_link3": "https://discord.gg/HpA7JdP3uq",
-        "label_text4": "GitHub:\n'vs-marshall'",
-        "label_link4": "https://github.com/vs-marshall/Chione"
+        "label": 3,
+        "label_text1": "If you find any bugs or have suggestions, please report them on the GitHub page or Discord server.",
+        "label_text2": "Discord:\n'marshall.com'",
+        "label_link2": "https://discord.gg/HpA7JdP3uq",
+        "label_text3": "GitHub:\n'vs-marshall'",
+        "label_link3": "https://github.com/vs-marshall/Chione"
     }
 }

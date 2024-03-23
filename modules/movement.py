@@ -23,21 +23,42 @@ def autosprint(self, module):
 def thread_autosprint(self, module): 
     threading.Thread(target=autosprint, args=(self, module), daemon=True).start()
 
-def wtap(self, module, delay, randomize, hold):
+def get_key_for_mode(mode):
+    mapping = {
+        "W-Tap": {"control": "Controls_2", "key": "W"},
+        "S-Tap": {"control": "Controls_4", "key": "S"},
+        "Crouch": {"control": "Controls_1", "key": "CTRL"}
+    }
+    return mapping.get(mode)
+
+def sprintreset(self, module, delay, randomize, hold, mode):
     previous_button_state = 0 
+
+    control, key = get_key_for_mode(mode).values()
 
     while self.module_states.get(module):
         if self.currently_in_foreground and not self.currently_in_menu:
             left_button_state = win32api.GetKeyState(0x01)
 
-            # Check if W Key is pressed and state of left button has changed
-            if keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
-                keyboard.block_key(get_controls(self, "Controls_2", "W")) # Block the w key to prevent user inputs
-                pyautogui.keyUp(get_controls(self, "Controls_2", "W"))
-                time.sleep(hold) 
-                keyboard.unblock_key(get_controls(self, "Controls_2", "W")) # Unblock or no w for you lol
-                if keyboard.is_pressed(get_controls(self, "Controls_2", "W")):  # Make sure the w key is still pressed by the user
-                    pyautogui.keyDown(get_controls(self, "Controls_2", "W"))
+            hold_lc = self.get_checkbox_value("LeftClicker", 0) # Get if hold left click is enabled, risky since the 0 is hardcoded
+
+            if (keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and                                      # Check if W Key is pressed, always has to be pressed, then one of the following conditions has to be true
+                ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or  # Check if the state of the left button has changed
+                (self.module_states.get("LeftClicker") and hold_lc and left_button_state < 0) or                    # Alternatively, check if the left button is pressed while left clicker is enabled and hold left click is enabled
+                (self.module_states.get("LeftClicker") and not hold_lc))):                                          # Alternatively, check if left clicker is enabled
+
+                if(mode == "W-Tap"): # More complex logic for W-Tap, since we have to workaround the user input
+                    keyboard.block_key(get_controls(self, control, key)) # Block the w key to prevent user inputs
+                    pyautogui.keyUp(get_controls(self, control, key))
+                    time.sleep(hold) 
+                    keyboard.unblock_key(get_controls(self, control, key)) # Unblock or no w for you lol
+                    if keyboard.is_pressed(get_controls(self, control, key)):  # Make sure the w key is still pressed by the user
+                        pyautogui.keyDown(get_controls(self, control, key))
+                        
+                elif(mode == "S-Tap" or mode == "Crouch"):
+                    pyautogui.keyDown(get_controls(self, control, key))
+                    time.sleep(hold)
+                    pyautogui.keyUp(get_controls(self, control, key))
 
             # Update the previous button state
             previous_button_state = left_button_state
@@ -48,8 +69,8 @@ def wtap(self, module, delay, randomize, hold):
         else:
             time.sleep(0.1) # Sleep to reduce CPU usage
 
-def thread_wtap(self, module, slider, randomize, hold):
-    threading.Thread(target=wtap, args=(self, module, slider, randomize, hold), daemon=True).start()
+def thread_sprintreset(self, module, slider, randomize, hold, mode):
+    threading.Thread(target=sprintreset, args=(self, module, slider, randomize, hold, mode), daemon=True).start()
 
 def strafing(self, module, delay, randomize, hold):
     last_key_pressed = random.choice([get_controls(self, "Controls_3", "a"), get_controls(self, "Controls_5", "d")])

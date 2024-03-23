@@ -2,7 +2,7 @@ from config.setup import *
 import tkinter as tk
 
 # copied and modified from https://stackoverflow.com/questions/3221956/how-do-i-display-tooltips-in-tkinter
-class CreateToolTip(object):
+class ToolTip(object):
     def __init__(self, widget, text, enabled):
         self.widget = widget
         self.text = text

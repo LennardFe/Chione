@@ -22,6 +22,7 @@ def load_logic(self, path):
             module["hotkey"] = module_data.get("hotkey", False)
             sliders_count = module.get("slider", 0)
             checkboxes_count = module.get("checkbox", 0)
+            dropdowns_count = module.get("dropdown", 0)
             buttons_count = module.get("button", 0)
 
             for x in range(sliders_count):
@@ -31,6 +32,10 @@ def load_logic(self, path):
             for x in range(checkboxes_count):
                 checkbox_key = f"{module_name}_{x}"
                 self.checkboxs[checkbox_key] = module_data.get(f"checkbox_{x}", False)
+
+            for x in range(dropdowns_count):
+                dropdown_key = f"{module_name}_{x}"
+                self.dropdowns[dropdown_key] = module_data.get(f"dropdown_{x}", False)
 
             for x in range(buttons_count):
                 button_key = f"{module_name}_{x}"
@@ -69,7 +74,12 @@ def save_logic(self, path):
             checkbox = self.checkboxs.get(f"{module_name}_{x}")
             module_data[f"checkbox_{x}"] = checkbox if isinstance(checkbox, bool) else (checkbox.get() if checkbox else None)
 
-        # Check if the module has a button, then include button data
+        # Include dropdown data
+        for x in range(module_info.get("dropdown", 0)):
+            dropdown = self.dropdowns.get(f"{module_name}_{x}")
+            module_data[f"dropdown_{x}"] = dropdown if isinstance(dropdown, str) else (dropdown.selected_option.get() if dropdown else None)
+
+        #Include button data
         for x in range(module_info.get("button", 0)):
             button = self.buttons.get(f"{module_name}_{x}")
             if isinstance(button, str):

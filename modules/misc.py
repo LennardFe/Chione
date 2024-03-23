@@ -17,11 +17,7 @@ def anti_afk(self, module, timer, randomize):
 def thread_antiafk(self, module, timer, randomize):
     threading.Thread(target=anti_afk, args=(self, module, timer, randomize), daemon=True).start()
 
-def selfdestruct(self, _, delete_everything):
-    if delete_everything:
-        os.remove(get_user_path(self.json_file))
-        os.remove(os.path.dirname(sys.argv[0]))
-        self.root.destroy()
-    else:
-        save_settings(self, self.json_file)
-        self.root.destroy()
+def selfdestruct(self, _):
+    #os.remove(get_user_path(self.json_file))
+    save_settings(self, self.json_file)
+    self.root.destroy()

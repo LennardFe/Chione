@@ -14,7 +14,7 @@
         "slider_0": 20,
         "slider_1": 2,
         "slider_2": 2,
-        "checkbox_0": false
+        "checkbox_0": true
     },
     {
         "name": "AutoSprint",
@@ -42,36 +42,38 @@
     },
     {
         "name": "SelfDestruct",
-        "hotkey": "None",
-        "checkbox_0": false
+        "hotkey": "None"
     },
     {
         "name": "LoadConfig",
-        "button_0": null
+        "hotkey": false
     },
     {
         "name": "SaveConfig",
-        "button_0": null
+        "hotkey": false
     },
     {
         "name": "General",
+        "hotkey": false,
         "checkbox_0": false,
         "checkbox_1": false,
         "checkbox_2": false,
         "checkbox_3": false,
         "checkbox_4": false,
-        "button_0": null
+        "button_0": "Reset Chione"
     },
     {
         "name": "Controls",
-        "button_0": null,
-        "button_1": null,
-        "button_2": null,
-        "button_3": null,
-        "button_4": null,
-        "button_5": null
+        "hotkey": false,
+        "button_0": "[SHIFT]",
+        "button_1": "[CTRL]",
+        "button_2": "[W]",
+        "button_3": "[A]",
+        "button_4": "[S]",
+        "button_5": "[D]"
     },
     {
-        "name": "About"
+        "name": "Others",
+        "hotkey": false
     }
 ]

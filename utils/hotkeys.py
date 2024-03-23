@@ -47,6 +47,9 @@ def on_key_press(self, key):
 
 def get_controls(self, action_key, default):
     key = self.buttons.get(action_key, default)
+    if key == "None" or key is None:
+        return default
+    
     if isinstance(key, str):
         key = re.sub(r'^\[|\]$', '', key)
         return key
@@ -55,9 +58,8 @@ def get_controls(self, action_key, default):
         key_text = re.sub(r'^\[|\]$', '', key_text)
         return key_text
     
-# goofy solution, the problem is tkinter and pyautogui use different names for the same key
 def check_special_chars(key):
+    # goofy solution, the problem is tkinter and pyautogui use different names for the same key
     if key == "Control": return "ctrl"
     elif key == "Caps": return "capslock"
     else: return key 
-
