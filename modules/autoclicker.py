@@ -40,7 +40,7 @@ def shake_effect(shake):
 def leftclick(self, module, clicks_per_second, randomize, shake, blockhit, hold, button):
     while self.module_states.get(module):
         interval = None
-        left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000        
+        left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000   
         if self.currently_in_foreground and not self.currently_in_menu:
             if hold and left_button_state:
                 rand_cps = clicks_per_second + random.randint(-randomize, randomize)

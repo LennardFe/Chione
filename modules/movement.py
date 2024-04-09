@@ -72,7 +72,7 @@ def sprintreset(self, module, delay, randomize, hold, mode):
 def thread_sprintreset(self, module, slider, randomize, hold, mode):
     threading.Thread(target=sprintreset, args=(self, module, slider, randomize, hold, mode), daemon=True).start()
 
-def strafing(self, module, delay, randomize, hold):
+def strafing(self, module, delay, randomize, hold, randomize_direction):
     last_key_pressed = random.choice([get_controls(self, "Controls_3", "a"), get_controls(self, "Controls_5", "d")])
     previous_button_state = 0  
 
@@ -80,9 +80,18 @@ def strafing(self, module, delay, randomize, hold):
         if self.currently_in_foreground and not self.currently_in_menu:
             left_button_state = win32api.GetKeyState(0x01)
 
+            hold_lc = self.get_checkbox_value("LeftClicker", 0) # Get if hold left click is enabled, risky since the 0 is hardcoded
+
             # Check if W Key is pressed and state of left button has changed
-            if keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or (self.module_states.get("LeftClicker") and left_button_state < 0)):
-                key_to_press = get_controls(self, "Controls_5", "D") if last_key_pressed == get_controls(self, "Controls_3", "A") else get_controls(self, "Controls_3", "A")
+            if (keyboard.is_pressed(get_controls(self, "Controls_2", "W")) and                                      # Check if W Key is pressed, always has to be pressed, then one of the following conditions has to be true
+                ((((not self.module_states.get("LeftClicker")) and previous_button_state != left_button_state)) or  # Check if the state of the left button has changed
+                (self.module_states.get("LeftClicker") and hold_lc and left_button_state < 0) or                    # Alternatively, check if the left button is pressed while left clicker is enabled and hold left click is enabled
+                (self.module_states.get("LeftClicker") and not hold_lc))):                                          # Alternatively, check if left clicker is enabled
+
+                if not randomize_direction: # If randomize direction is disabled, strafe in the opposite direction as the last key
+                    key_to_press = get_controls(self, "Controls_5", "D") if last_key_pressed == get_controls(self, "Controls_3", "A") else get_controls(self, "Controls_3", "A")
+                else:
+                    key_to_press = random.choice([get_controls(self, "Controls_3", "a"), get_controls(self, "Controls_5", "d")])
 
                 pyautogui.keyDown(key_to_press)
                 time.sleep(hold)
@@ -100,5 +109,5 @@ def strafing(self, module, delay, randomize, hold):
         else:
             time.sleep(0.1) # Sleep to reduce CPU usage
 
-def thread_strafing(self, module, delay, randomize, hold):
-    threading.Thread(target=strafing, args=(self, module, delay, randomize, hold), daemon=True).start()
+def thread_strafing(self, module, delay, randomize, hold, randomize_direction):
+    threading.Thread(target=strafing, args=(self, module, delay, randomize, hold, randomize_direction), daemon=True).start()

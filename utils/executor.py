@@ -1,32 +1,24 @@
 import time
 
-last_key_press_time = 0.0
-spam_delay = 0.25
-
 def toggle_and_execute(self, module):
-    global last_key_press_time
-    current_time = time.time()
+    try:
+        new_state = not self.module_states.get(module, False)
+        button = self.toggle_buttons[module]
+        command = self.modules[module]["command"]
+        params = get_params(self, self.modules[module]["params"], module)
 
-    if current_time - last_key_press_time >= spam_delay: # Prevent spamming of hotkeys
-        last_key_press_time = current_time
         try:
-            new_state = not self.module_states.get(module, False)
-            button = self.toggle_buttons[module]
-            command = self.modules[module]["command"]
-            params = get_params(self, self.modules[module]["params"], module)
+            button.config(image=self.on if new_state else self.off)
+        except:
+            pass  # Ignore any errors during image configuration
 
-            try:
-                button.config(image=self.on if new_state else self.off)
-            except:
-                pass  # Ignore any errors during image configuration
+        self.module_states[module] = new_state
 
-            self.module_states[module] = new_state
-
-            if new_state:
-                command(self, module, *params)
-
-        except Exception as e:
-            print(f"Exception: {e} with module {module}") # If options page has not been opened yet, module cant be loaded
+        if new_state:
+            command(self, module, *params)
+            
+    except Exception as e:
+        print(f"Exception: {e} with module {module}") # If options page has not been opened yet, module cant be loaded
 
 def retoggle(self, module):
     # TODO Rework, not the nicest solution

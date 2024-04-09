@@ -2,13 +2,14 @@ from config.setup import *
 import tkinter as tk
 
 class Dropdown(tk.Frame):
-    def __init__(self, master, display_text, options, command):
+    def __init__(self, master, display_text, options, relief, command):
         super().__init__(master)
         
         # Set the variables
         self.display_text = f"{display_text} ↓"
         self.options = options
         self.selected_option = tk.StringVar()
+        self.relief = relief
         
 
         # include command
@@ -21,7 +22,7 @@ class Dropdown(tk.Frame):
                                          font=(FONT, FONT_SIZE_CONTENT), 
                                          bg=CONTENT_COLOR, 
                                          fg=FONT_COLOR, 
-                                         relief=RELIEF_FANCY, 
+                                         relief=self.relief, 
                                          activebackground=PRESS_COLOR,
                                          command=self.toggle_dropdown)
         
@@ -41,9 +42,12 @@ class Dropdown(tk.Frame):
                                         bg=CONTENT_COLOR, 
                                         height=0, # Set to 0 to allow for dynamic height
                                         fg=FONT_COLOR, 
-                                        selectbackground=PRESS_COLOR, 
-                                        relief=RELIEF_FANCY)
-
+                                        highlightcolor=PRESS_COLOR,
+                                        highlightbackground=PRESS_COLOR,
+                                        selectbackground=PRESS_COLOR,
+                                        highlightthickness=2,
+                                        border=2)
+        
         # Insert options into the dropdown menu
         for option in self.options:
             self.dropdown_menu.insert(tk.END, option)
@@ -63,11 +67,11 @@ class Dropdown(tk.Frame):
         if self.dropdown_menu.winfo_ismapped():
             self.tw.withdraw()
         else:
-            x = self.dropdown_button.winfo_rootx()
+            x = self.dropdown_button.winfo_rootx() - 2 # -2 because of the new frame sourounding the button
             y = self.dropdown_button.winfo_rooty() + self.dropdown_button.winfo_height()
 
             # Get the width of the dropdown button
-            button_width = self.dropdown_button.winfo_width()
+            button_width = self.dropdown_button.winfo_width() + 4 # 4 because of the new frame sourounding the button
 
             # Get the height of the dropdown menu
             menu_height = self.dropdown_menu.winfo_reqheight()

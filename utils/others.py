@@ -1,4 +1,4 @@
-import webbrowser, sys, os
+import webbrowser, sys, os, pyautogui, random, time, keyboard
 
 def open_web(url):
     webbrowser.open_new(url)

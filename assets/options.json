@@ -69,8 +69,8 @@
     {
         "name": "Controls",
         "hotkey": false,
-        "button_0": "[SHIFT]",
-        "button_1": "[CTRL]",
+        "button_0": "[CTRL]",
+        "button_1": "[SHIFT]",
         "button_2": "[W]",
         "button_3": "[A]",
         "button_4": "[S]",
