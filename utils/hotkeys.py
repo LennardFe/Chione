@@ -58,11 +58,15 @@ def on_key_press(self, key):
         key_char = str(key)
 
     # Check if the pressed key matches any hotkey
-    for module, data in self.modules.items():
-        if data["hotkey"] != False:
-            if "hotkey" in data and data["hotkey"].lower() == key_char.lower():
-                if self.hotkeys_enabled:
-                    toggle_and_execute(self, module)
+    try:
+        if key_char is not None:
+            for module, data in self.modules.items():
+                if data["hotkey"] != False:
+                    if "hotkey" in data and data["hotkey"].lower() == key_char.lower():
+                        if self.hotkeys_enabled:
+                            toggle_and_execute(self, module)
+    except AttributeError: # TODO: Find a better way to handle this
+        print("Goofy error, which i cant really resolve.")
 
 def check_if_already_in_use(self, key):
     for module, data in self.modules.items():

@@ -188,8 +188,18 @@ class GUI:
         # Filter modules based on the selected option's category
         modules_for_option = {name: module_info for name, module_info in self.modules.items() if module_info.get("category") == option}
 
+        # Create overlay frame, to prevent flickering
+        overlay_frame = tk.Frame(self.content_frame, bg=CONTENT_COLOR)
+        overlay_frame.place(relwidth=1, relheight=1)
+
         # Create widgets for filtered modules
         self.create_widgets_for_modules(modules_for_option)
+
+        # Raise overlay frame to the top
+        overlay_frame.tkraise()
+
+        # Remove the overlay frame after short delay
+        self.root.after(150, overlay_frame.destroy)
             
     def reset_button_colors(self):
         for button in self.option_buttons:
@@ -238,10 +248,6 @@ class GUI:
         module_frame = tk.Frame(self.content_frame, bg=CONTENT_COLOR, borderwidth=8, relief=RELIEF_FRAME)
         module_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Create overlay frame, to prevent flickering
-        overlay_frame = tk.Frame(self.content_frame, bg=CONTENT_COLOR)
-        overlay_frame.place(relwidth=1, relheight=1)
-
         # Create widgets for module
         self.create_title_label(module_frame, module)
         self.create_label(module_frame, module)
@@ -259,9 +265,6 @@ class GUI:
 
         # Resize window, after short delay to ensure all widgets are created
         self.root.after(50, self.resize_window)
-        
-        # Remove the overlay frame after short delay
-        self.root.after(50, overlay_frame.destroy)
 
     def create_title_label(self, parent, module):
         title = self.modules.get(module)["name"]

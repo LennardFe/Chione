@@ -61,10 +61,12 @@ modules = {
         "dropdown_label1": "Pattern",
         "dropdown_tooltip1": "Specify the click pattern to use.",
         "dropdown_values1": ["Basic", "Butterfly", "Jitter"],
-        "checkbox": 1,
+        "checkbox": 2,
         "checkbox_text1": "Hold Leftclick",
         "checkbox_tooltip1": "Click while holding leftclick.",
-        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value"], 
+        "checkbox_text2": "Break Blocks ⚠",
+        "checkbox_tooltip2": "Allow for breaking blocks while clicking.",
+        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value", "get_checkbox_value"], 
         "command": thread_lclick
     },
     "RightClicker": {
@@ -91,10 +93,12 @@ modules = {
         "slider_step3": 1,
         "slider_default3": 2,
         "slider_tooltip3": "Shake the mouse while rightclicking.",
-        "checkbox": 1,
+        "checkbox": 2,
         "checkbox_text1": "Hold Rightclick",
         "checkbox_tooltip1": "Click while holding rightclick.",
-        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value"], 
+        "checkbox_text2": "Allow Eating ⚠",
+        "checkbox_tooltip2": "Allow for eating while clicking.",
+        "params": ["get_slider_value", "get_slider_value", "get_slider_value", "get_checkbox_value", "get_checkbox_value"], 
         "command": thread_rclick
     },
     "AutoSprint": {

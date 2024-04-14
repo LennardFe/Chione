@@ -9,13 +9,18 @@ def find_win_pos():
 
     return title, param
 
-def click_mouse(title, param, button):
-    msg_down = win32con.WM_LBUTTONDOWN if button == 'left' else win32con.WM_RBUTTONDOWN
-    msg_up = win32con.WM_LBUTTONUP if button == 'left' else win32con.WM_RBUTTONUP
-    state = win32con.MK_LBUTTON if button == 'left' else win32con.MK_RBUTTON
+def click_mouse(title, param, button, bblock = None):
+    if not bblock or bblock is None:
+        msg_down = win32con.WM_LBUTTONDOWN if button == 'left' else win32con.WM_RBUTTONDOWN
+        msg_up = win32con.WM_LBUTTONUP if button == 'left' else win32con.WM_RBUTTONUP
+        state = win32con.MK_LBUTTON if button == 'left' else win32con.MK_RBUTTON
 
-    win32api.SendMessage(title, msg_down, state, param)
-    win32api.SendMessage(title, msg_up, state, param)  
+        win32api.SendMessage(title, msg_down, state, param)
+        win32api.SendMessage(title, msg_up, state, param) 
+
+    else:
+        msg_down = win32con.MOUSEEVENTF_LEFTDOWN if button == 'left' else win32con.MOUSEEVENTF_RIGHTDOWN
+        win32api.mouse_event(msg_down, 0, 0) # using mouse_event instead of SendMessage, for some reason this works better
 
 def shake_effect(shake):
     if shake == 0:
@@ -37,54 +42,69 @@ def shake_effect(shake):
     new_pos = (currentPos[0] + x_adjust * pixels, currentPos[1] + y_adjust * pixels)
     win32api.SetCursorPos(new_pos)
 
-def leftclick(self, module, clicks_per_second, randomize, shake, blockhit, hold, button):
+def interval_calculator(cps, randomize, bblock):
+    rand_cps = cps + random.randint(-randomize, randomize)
+
+    # Difference in 1.1 and 0.9 to equalize them, since the execution time varies for the bblock and non-bblock
+    if bblock:
+        interval = 1.1 / ((rand_cps) if rand_cps > 0 else 1)
+        return interval
+    else:
+        interval = 0.95 / ((rand_cps) if rand_cps > 0 else 1)
+        return interval
+
+def leftclick(self, module, clicks_per_second, randomize, shake, blockhit, hold, bblock, button):
     while self.module_states.get(module):
         interval = None
         left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000   
         if self.currently_in_foreground and not self.currently_in_menu:
             if hold and left_button_state:
-                rand_cps = clicks_per_second + random.randint(-randomize, randomize)
-                interval = 1 / ((rand_cps) if rand_cps > 0 else 1)
+                interval = interval_calculator(clicks_per_second, randomize, bblock)
                 title, param = find_win_pos()
-                click_mouse(title, param, button)
+                click_mouse(title, param, button, bblock)
                 if (random.randint(1, 200) <= blockhit):  # 200 so it's not too often
-                    click_mouse(title, param, button="right")
+                    click_mouse(title, param, "right")
                 shake_effect(shake)
 
             elif not hold:
-                interval = random.uniform(0.4, 1.6) / clicks_per_second if randomize else 1 / clicks_per_second
+                interval = interval_calculator(clicks_per_second, randomize, bblock)
                 title, param = find_win_pos()
-                click_mouse(title, param, button)
+                click_mouse(title, param, button, bblock)
                 if random.randint(1, 200) <= blockhit:  # 200 so it's not too often
-                    click_mouse(title, param, button="right")
+                    click_mouse(title, param, "right")
                 shake_effect(shake)
             
             time.sleep(interval) if interval is not None else time.sleep(0.1)
         else:
             time.sleep(0.1)
 
-def thread_lclick(self, module, slider, randomize, shake, blockhit, hold, button="left"):
-    threading.Thread(target=leftclick, args=(self, module, slider, randomize, shake, blockhit, hold, button), daemon=True).start()
+    # Stop left holding
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
 
-def rightclick(self, module, clicks_per_second, randomize, shake, hold, button):
+def thread_lclick(self, module, slider, randomize, shake, blockhit, hold, bblock, button="left"):
+    threading.Thread(target=leftclick, args=(self, module, slider, randomize, shake, blockhit, hold, bblock, button), daemon=True).start()
+
+def rightclick(self, module, clicks_per_second, randomize, shake, hold, eat, button):
     while self.module_states.get(module):
         interval = None
         right_button_state = win32api.GetAsyncKeyState(0x02)&0x8000
         if self.currently_in_foreground and not self.currently_in_menu:
             if hold and right_button_state:
-                rand_cps = clicks_per_second + random.randint(-randomize, randomize)
-                interval = 1 / ((rand_cps) if rand_cps > 0 else 1)
+                interval = interval_calculator(clicks_per_second, randomize, eat)
                 title, param = find_win_pos()
-                click_mouse(title, param, button)   
+                click_mouse(title, param, button, eat)   
                 shake_effect(shake)
 
             elif not hold:
-                interval = random.uniform(0.4, 1.6) / clicks_per_second if randomize else 1 / clicks_per_second
+                interval = interval_calculator(clicks_per_second, randomize, eat)
                 title, param = find_win_pos()
-                click_mouse(title, param, button) 
+                click_mouse(title, param, button, eat) 
                 shake_effect(shake)
             
             time.sleep(interval) if interval is not None else time.sleep(0.1)
 
-def thread_rclick(self, module, slider, randomize, shake, hold, button="right"):
-    threading.Thread(target=rightclick, args=(self, module, slider, randomize, shake, hold, button), daemon=True).start()
+    # stop right holding
+    win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
+
+def thread_rclick(self, module, slider, randomize, shake, hold, eat, button="right"):
+    threading.Thread(target=rightclick, args=(self, module, slider, randomize, shake, hold, eat, button), daemon=True).start()
