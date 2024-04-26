@@ -139,7 +139,7 @@ class GUI:
                                      fg=FEATURE_COLOR, 
                                      font=(FONT, FONT_SIZE_BIG_TITLE, "bold"),
                                      bg=MENU_COLOR)
-        client_name_label.pack()
+        client_name_label.pack(ipadx=10)
 
         # Creating option buttons
         self.option_buttons = []
@@ -150,19 +150,20 @@ class GUI:
     def create_option_button(self, parent, option):
         # Creating option button
         button = tk.Button(parent,
-                            bg=MENU_COLOR, 
-                            fg=FONT_COLOR, 
-                            font=(FONT, FONT_SIZE_OPTIONS), 
-                            relief=RELIEF_BASIC, 
-                            text=option, 
-                            activebackground=PRESS_COLOR, 
-                            command=lambda opt=option: self.option_content(opt)) 
+                           bg=MENU_COLOR, 
+                           fg=FONT_COLOR, 
+                           font=(FONT, FONT_SIZE_OPTIONS), 
+                           relief=RELIEF_BASIC, 
+                           text=option, 
+                           activebackground=PRESS_COLOR, 
+                           command=lambda opt=option: self.option_content(opt),
+                           anchor=tk.W) 
         
         # Adjusting button placement based on option
-        if option == "⚙️ Settings" or option ==  "🔧 Configs":
-            button.pack(fill=tk.X, pady=0, ipady=10, side=tk.BOTTOM)
+        if option == " ⚙️ Settings" or option ==  " 🔧 Configs":
+            button.pack(fill=tk.X, pady=0, ipady=5, side=tk.BOTTOM)
         else:
-            button.pack(fill=tk.X, pady=0, ipady=10, side=tk.TOP)
+            button.pack(fill=tk.X, pady=0, ipady=5, side=tk.TOP)
         return button
 
     def create_content_frame(self):
@@ -199,7 +200,7 @@ class GUI:
         overlay_frame.tkraise()
 
         # Remove the overlay frame after short delay
-        self.root.after(150, overlay_frame.destroy)
+        self.root.after(50, overlay_frame.destroy)
             
     def reset_button_colors(self):
         for button in self.option_buttons:
@@ -259,7 +260,7 @@ class GUI:
         # Create seperate frame for hotkey and toggle button
         hotkey_toggle_frame = tk.Frame(module_frame, bg=CONTENT_COLOR)	
         hotkey_toggle_frame.pack(side=tk.BOTTOM, fill=tk.X, anchor=tk.S)
-
+        
         self.create_hotkey_button(hotkey_toggle_frame, module)
         self.create_toggle_button(hotkey_toggle_frame, module)
 
@@ -373,7 +374,7 @@ class GUI:
                 if module_name.get(f"checkbox_command{x+1}"):
                     cb_command = module_name.get(f"checkbox_command{x+1}")
                     checkbox = tk.Checkbutton(parent, 
-                                              text=checkbox_text, 
+                                              text=f"  {checkbox_text}", 
                                               font=(FONT, FONT_SIZE_CONTENT), 
                                               variable=checkbox_var, 
                                               bg=CONTENT_COLOR, 
@@ -381,13 +382,14 @@ class GUI:
                                               selectcolor=CONTENT_COLOR, 
                                               relief=RELIEF_BASIC, 
                                               activebackground=PRESS_COLOR, 
-                                              highlightthickness=0, 
+                                              highlightthickness=0,
+                                              anchor=tk.W,
                                               command=lambda cb=cb_command, 
                                               var=checkbox_var: cb(self, module, var.get()))
                     
                 else:
                     checkbox = tk.Checkbutton(parent, 
-                                              text=checkbox_text, 
+                                              text=f"  {checkbox_text}", 
                                               font=(FONT, FONT_SIZE_CONTENT), 
                                               variable=checkbox_var, 
                                               bg=CONTENT_COLOR, 
@@ -396,6 +398,7 @@ class GUI:
                                               relief=RELIEF_BASIC, 
                                               activebackground=PRESS_COLOR, 
                                               highlightthickness=0, 
+                                              anchor=tk.W,
                                               command=lambda: retoggle(self, module))            
                 
                 checkbox.pack(side=tk.TOP, 
@@ -492,10 +495,12 @@ class GUI:
                                      font=(FONT, FONT_SIZE_CONTENT), 
                                      bg=CONTENT_COLOR, 
                                      wraplength=LENGTH, 
-                                     width=WIDTH)
+                                     width=WIDTH,
+                                     anchor=tk.W)
                     
                     label.pack(fill=tk.BOTH, 
-                               expand=True)
+                               expand=True,
+                               padx=2*CONTENT_PAD_X)
 
                 # Get button values / image or text, kinda hardcoded for load and save config
                 if(module_name.get(f"button_img{x+1}")):
@@ -535,13 +540,13 @@ class GUI:
                                        command=lambda bt=button_text, name=name: button_command(self, module, name, bt))
                     
                     button_border.pack(side=tk.TOP,
-                                       fill=tk.X, 
+                                       fill=tk.X, # only X fill, to differentiate between the settings and the content
                                        expand=True,
-                                       padx=4*CONTENT_PAD_X, # 4* here -> to differentiate between the settings and the content
+                                       padx=2*CONTENT_PAD_X,
                                        pady=(0, CONTENT_PAD_Y)) # 0 here -> mainly so the controls are close to the corresponding label
 
                     button.pack(side=tk.TOP, 
-                                fill=tk.X,  # only x fill, to differentiate between the settings and the content
+                                fill=tk.X,  
                                 expand=True)
 
                 # Display hover information / if tooltip exists

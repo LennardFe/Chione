@@ -30,7 +30,7 @@ CONTENT_PAD_X = 10
 RELIEF_BASIC = "flat"
 RELIEF_FANCY = "ridge"
 RELIEF_FRAME = "sunken"
-DEFAULT_PAGE = "⚔️ AutoClicker"
+DEFAULT_PAGE = " ⚔️ Clicker"
 
 # Tooltip
 WAIT_TIME = 25

@@ -19,8 +19,11 @@ def click_mouse(title, param, button, bblock = None):
         win32api.SendMessage(title, msg_up, state, param) 
 
     else:
-        msg_down = win32con.MOUSEEVENTF_LEFTDOWN if button == 'left' else win32con.MOUSEEVENTF_RIGHTDOWN
-        win32api.mouse_event(msg_down, 0, 0) # using mouse_event instead of SendMessage, for some reason this works better
+        msg_down_bb = win32con.MOUSEEVENTF_LEFTDOWN if button == 'left' else win32con.MOUSEEVENTF_RIGHTDOWN
+        win32api.mouse_event(msg_down_bb, 0, 0) 
+
+        #msg_down_bb = win32con.WM_LBUTTONDOWN if button == 'left' else win32con.WM_RBUTTONDOWN
+        #win32api.SendMessage(title, msg_down_bb, 0, 0)
 
 def shake_effect(shake):
     if shake == 0:
@@ -56,7 +59,7 @@ def interval_calculator(cps, randomize, bblock):
 def leftclick(self, module, clicks_per_second, randomize, shake, blockhit, hold, bblock, button):
     while self.module_states.get(module):
         interval = None
-        left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000   
+        left_button_state = win32api.GetAsyncKeyState(0x01) & 0x8000
         if self.currently_in_foreground and not self.currently_in_menu:
             if hold and left_button_state:
                 interval = interval_calculator(clicks_per_second, randomize, bblock)
@@ -87,23 +90,25 @@ def thread_lclick(self, module, slider, randomize, shake, blockhit, hold, bblock
 def rightclick(self, module, clicks_per_second, randomize, shake, hold, eat, button):
     while self.module_states.get(module):
         interval = None
-        right_button_state = win32api.GetAsyncKeyState(0x02)&0x8000
+        right_button_state = win32api.GetAsyncKeyState(0x02) & 0x8000
         if self.currently_in_foreground and not self.currently_in_menu:
             if hold and right_button_state:
                 interval = interval_calculator(clicks_per_second, randomize, eat)
                 title, param = find_win_pos()
-                click_mouse(title, param, button, eat)   
+                click_mouse(title, param, button, eat)
                 shake_effect(shake)
 
             elif not hold:
                 interval = interval_calculator(clicks_per_second, randomize, eat)
                 title, param = find_win_pos()
-                click_mouse(title, param, button, eat) 
+                click_mouse(title, param, button, eat)
                 shake_effect(shake)
             
             time.sleep(interval) if interval is not None else time.sleep(0.1)
+        else:
+            time.sleep(0.1)
 
-    # stop right holding
+    # Stop right holding
     win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
 
 def thread_rclick(self, module, slider, randomize, shake, hold, eat, button="right"):

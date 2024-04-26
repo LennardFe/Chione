@@ -22,18 +22,22 @@ def set_hotkey(self, button, module):
             self.modules[module]["hotkey"] = "None"
             button.config(text="Bind Hotkey")
             popup.destroy()
-        elif key.isalnum() and len(key) == 1: # Only letters and numbers allowed
-            if check_if_already_in_use(self, key):
+        else:
+            if check_already_in_use(self, key):
                 showinfo("Error", "This hotkey is already in use.")
                 popup.focus_force()
                 return
             
+            if (not key.isalnum() or len(key) > 1): #TODO: Handle special characters
+                key = map_sepcial_chars(key.lower())
+                if key is None:
+                    showinfo("Error", "Special character not supported as a hotkey.")
+                    popup.focus_force()
+                    return
+            
             self.modules[module]["hotkey"] = key
             button.config(text=(f"Key: [{(key).upper()}]"))
             popup.destroy()
-        else:
-            showinfo("Error", "Only letters and numbers are allowed for hotkeys.")
-            popup.focus_force()
 
         self.hotkeys_enabled = True
 
@@ -55,7 +59,7 @@ def on_key_press(self, key):
     try: # Convert the key to a string representation   
         key_char = key.char
     except AttributeError: # Handle special keys like Shift, Alt, etc.
-        key_char = str(key)
+        key_char = str(key).replace("Key.", "") # remove the prefix "Key." from the key
 
     # Check if the pressed key matches any hotkey
     try:
@@ -68,7 +72,7 @@ def on_key_press(self, key):
     except AttributeError: # TODO: Find a better way to handle this
         print("Goofy error, which i cant really resolve.")
 
-def check_if_already_in_use(self, key):
+def check_already_in_use(self, key):
     for module, data in self.modules.items():
         if data["hotkey"] != False:
             if "hotkey" in data and data["hotkey"].lower() == key.lower():
@@ -88,6 +92,28 @@ def get_controls(self, action_key, default):
         key_text = re.sub(r'^\[|\]$', '', key_text)
         return key_text
     
+def map_sepcial_chars(key):
+    special_chars_mapping = {
+        'control_l': 'ctrl_l',
+        'shift_l': 'shift',
+        'win_l': 'cmd',
+        'less': '<',
+        'app': 'menu',
+        'control_r': 'ctrl_r',
+        'comma': ',',
+        'period': '.',
+        'minus': '-',
+        'return': 'enter',
+        'ssharp': 'ß',
+        'plus': '+',
+        'numbersign': '#',
+        'next': 'page_down',
+        'prior': 'page_up',
+        'multi_key': None, # Not supported
+    }
+
+    return special_chars_mapping.get(key, key)
+
 def check_special_chars(key):
     # Goofy solution, the problem is tkinter and pyautogui use different names for the same key
     if key == "Control": return "ctrl"
