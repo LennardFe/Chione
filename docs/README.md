@@ -7,14 +7,14 @@
 <h2 align="center">Features</h2>
 
 <div align="justify">
-<p>Simple tool for autoclicking and basic macro assistance. It bypasses all well-known clients, functions on any Minecraft version, and remains undetected by major servers. Features include Left- and Right-Click, Auto-Sprint, W-Tap, Strafing, Anti-AFK, and Self-Destruct. The settings provide customizability so you can adjust the program to your likings, like stopping all modules while in the menu and only activating them while the active window is Minecraft. Additionally, tooltips should explain all functionality.</p>
+<p>Simple tool for autoclicking and basic macro assistance. The program bypasses all well-known clients, functions on any Minecraft version, and remains undetected by servers. Features include Left- and Right-Clicker, Auto-Sprint, SprintReset, Strafing, Anti-AFK, Self-Destruct and a Config-System. The settings provide customizability so you can adjust the program to your likings. Additionally, tooltips should explain all functionality.</p>
 </div>
 
 
 <h2 align="center">Screenshots</h2>
 
-![image](https://github.com/vs-marshall/Chione/assets/78146861/5994fc19-cb70-4ad6-b5b6-143b43671174)
-![image](https://github.com/vs-marshall/Chione/assets/78146861/7e7e3fd0-1edf-444d-8ad8-0eba95fb2809)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/516ddead-0241-46a6-baa0-603ddace95a9)
+![image](https://github.com/vs-marshall/Chione/assets/78146861/6919e7b9-3c6d-446d-8d73-b0a2ee8455af)
 
 <h2 align="center">Installation</h2>
 
