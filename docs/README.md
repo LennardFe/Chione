@@ -25,10 +25,11 @@
 </div>
 
 <div align="justify">
-<p>Navigate to the <a href="https://github.com/vs-marshall/Chione/tree/main/output">output</a> folder containing the <a href="https://github.com/vs-marshall/Chione/blob/main/output/Chione.exe">Chione.exe</a> file, click on the .exe and then on the three dots at the top right, as shown in the picture below. Then click on <b>download</b>. The download takes a few seconds to start. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!</p>
+<p>Navigate to the <a href="https://github.com/vs-marshall/Chione/releases">release</a> section containing the Chione.exe file next to the source code, then click on .exe to download Chione. There is a possibility that your anti-virus program may flag the  .exe as a virus. I can assure you that this is not true; as the code is open source, you can take a look yourself. Enjoy!</p>
 </div>
 
-![download](https://github.com/vs-marshall/Chione/assets/78146861/003dd8e3-42ce-4328-b485-798fa47d5a40)
+![Screenshot 2024-04-26 151414](https://github.com/vs-marshall/Chione/assets/78146861/c8828f31-0031-46a0-8b1b-a7213562e6e6)
+![Screenshot 2024-04-26 151439](https://github.com/vs-marshall/Chione/assets/78146861/9892a2f6-111d-43b5-92da-f3df03acafce)
 
 <h3 align="center">For Developers:</h3>
 
